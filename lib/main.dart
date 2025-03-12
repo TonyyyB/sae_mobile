@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/src/widgets/button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -112,6 +113,12 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            PickMenuButton(
+              text: "Connexion",
+              onPressed: () {
+                print("Connexion");
+              },
+            )
           ],
         ),
       ),
