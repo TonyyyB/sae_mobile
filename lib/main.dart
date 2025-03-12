@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/src/theme.dart';
-import 'package:sae_mobile/src/widgets/button.dart';
 
 void main() {
   runApp(const MyApp());
