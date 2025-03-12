@@ -88,9 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text(
                       "Salut !",
                     style: PickMenuTheme.defaultTheme().textTheme.headlineMedium
-                  ),
-                  TextField(
-                    
                   )
                 ],
               )
