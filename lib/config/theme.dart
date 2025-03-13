@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sae_mobile/src/utils/colors.dart';
+import 'package:sae_mobile/config/colors.dart';
 
 class PickMenuTheme {
     static TextStyle inputHintTextStyle(){
