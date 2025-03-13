@@ -35,7 +35,12 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
-            const Text("Bienvenue")
+            const Text("Bienvenue"),
+            const TextField(
+              decoration: InputDecoration(
+                hintText: "Email",
+              ),
+            )
           ],
         ),
       ),

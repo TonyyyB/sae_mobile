@@ -2,6 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:sae_mobile/src/utils/colors.dart';
 
 class PickMenuTheme {
+    static TextStyle inputHintTextStyle(){
+        return const TextStyle(
+              fontSize: 16.0,
+              height: 24.0 / 16.0,
+              letterSpacing: 0.5,
+              fontFamily: 'LXGWWenKaiMonoTC',
+              color: PickMenuColors.inputHint
+            );
+    }
+    static TextStyle inputErrorTextStyle(){
+        return const TextStyle(
+              fontSize: 16.0,
+              height: 24.0 / 16.0,
+              letterSpacing: 0.5,
+              fontFamily: 'LXGWWenKaiMonoTC',
+              color: PickMenuColors.inputErrorText
+            );
+    }
   static ThemeData defaultTheme() {
     return ThemeData(
         textTheme: TextTheme(
@@ -101,7 +119,37 @@ class PickMenuTheme {
               fontFamily: 'LXGWWenKaiMonoTC',
               color: PickMenuColors.textColor),
         ),
-
+        inputDecorationTheme: InputDecorationTheme(
+            hintStyle: inputHintTextStyle(),
+            contentPadding: EdgeInsets.only(
+                left: 20,
+                bottom: 9,
+                top: 9
+            ),
+            labelStyle: inputErrorTextStyle(),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(
+                    color: PickMenuColors.inputBorder,
+                    width: 2.5,
+                )
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(
+                    color: PickMenuColors.inputBorder,
+                    width: 2.5,
+                )
+            ),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(
+                    color: PickMenuColors.inputErrorBorder,
+                    width: 2.5,
+                )
+            ),
+            errorStyle: inputErrorTextStyle()
+        )
         );
   }
 }
