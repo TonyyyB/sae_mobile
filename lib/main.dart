@@ -36,7 +36,11 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
-            const Text("Bienvenue")
+            const Text("Bienvenue"),
+            ElevatedButton(
+              onPressed: (){},
+              child: const Text("Connexion")
+              ),
           ],
         ),
       ),

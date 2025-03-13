@@ -8,4 +8,5 @@ class PickMenuColors{
   static const Color textFieldErrorBorder = Color(0xFFE57373);
 
   static const Color buttonColor = Color(0xFF75A482);
+  static const Color buttonTextColor = Color(0xFFFFFFFF);
 }

@@ -101,7 +101,28 @@ class PickMenuTheme {
               fontFamily: 'LXGWWenKaiMonoTC',
               color: PickMenuColors.textColor),
         ),
-
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+                padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 9, horizontal: 15)),
+                backgroundColor: WidgetStatePropertyAll(PickMenuColors.buttonColor),
+                foregroundColor: WidgetStatePropertyAll(PickMenuColors.buttonTextColor),
+                textStyle: WidgetStatePropertyAll(
+                    TextStyle(
+                        fontSize: 28.0,
+                        height: 36.0 / 28.0,
+                        letterSpacing: 0.0,
+                        fontFamily: 'LXGWWenKaiMonoTC',
+                        color: PickMenuColors.textColor
+                    )
+                ),
+                shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: BorderSide(color: PickMenuColors.buttonColor)
+                    )
+                )
+            ),
+        )
         );
   }
 }
