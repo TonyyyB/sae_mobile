@@ -41,7 +41,11 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: InputDecoration(
                 hintText: "Email"
               )
-            )
+            ),
+            ElevatedButton(
+              onPressed: (){},
+              child: const Text("Connexion")
+              ),
           ],
         ),
       ),

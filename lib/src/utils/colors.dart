@@ -16,4 +16,5 @@ class PickMenuColors{
   static const Color inputDisabledBorder = Color(0xFFAAAAAA);
   static const Color inputFocusBar = Color(0xFF75A482);
   static const Color inputErrorText = Color(0xFFBB4444);
+  static const Color buttonTextColor = Color(0xFFFFFFFF);
 }
