@@ -38,8 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text("Bienvenue"),
             const TextField(
               decoration: InputDecoration(
-                hintText: "Email",
-              ),
+                hintText: "Email"
+              )
             )
           ],
         ),

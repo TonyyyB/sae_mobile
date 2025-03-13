@@ -148,7 +148,24 @@ class PickMenuTheme {
                     width: 2.5,
                 )
             ),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(
+                    color: PickMenuColors.inputErrorBorder,
+                    width: 2.5,
+                )
+            ),
+            disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(
+                    color: PickMenuColors.inputDisabledBorder,
+                    width: 2.5,
+                )
+            ),
             errorStyle: inputErrorTextStyle()
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+            cursorColor: inputHintTextStyle().color
         )
         );
   }
