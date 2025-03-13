@@ -35,12 +35,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
+          spacing: 40,
           children: [
-            const Text("Bienvenue"),
+            Text("Connectez-vous", style: Theme.of(context).textTheme.headlineMedium),
             const TextField(
               decoration: InputDecoration(
                 hintText: "Email"
               )
+            ),
+            const TextField(
+              decoration: InputDecoration(
+                hintText: "Mot de passe"
+              ),
+              
             ),
             ElevatedButton(
               onPressed: (){},
