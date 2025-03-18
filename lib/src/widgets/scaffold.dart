@@ -13,40 +13,51 @@ class PickMenuScaffold extends StatefulWidget {
 
 class _PickMenuScaffoldState extends State<PickMenuScaffold> {
   TextEditingController searchController = TextEditingController();
+  FocusNode searchFocusNode = FocusNode();
+  bool showFilters = false;
   List<String> selectedCuisines = [];
   List<String> selectedTypes = [];
   List<String> selectedOptions = [];
-  String searchText = '';
 
-  void openFilterPanel() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return FilterPanel(
-          onApplyFilters: (cuisines, types, options) {
-            setState(() {
-              selectedCuisines = cuisines;
-              selectedTypes = types;
-              selectedOptions = options;
-            });
-
-            print('Filtres appliqués :');
-            print('Cuisines : $selectedCuisines');
-            print('Types : $selectedTypes');
-            print('Options : $selectedOptions');
-          },
-        );
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    searchFocusNode.addListener(() {
+      if (searchFocusNode.hasFocus) {
+        setState(() {
+          showFilters =
+              true; // Afficher les filtres dès qu'on clique dans le champ de recherche
+        });
+      }
+    });
   }
 
-  void updateSearch(String value) {
+  void toggleFilters() {
     setState(() {
-      searchText = value;
+      showFilters = !showFilters;
+      if (!showFilters) {
+        searchFocusNode.unfocus(); // Fermer les filtres et enlever le focus
+      }
     });
+  }
 
-    // 🔥 Ici tu peux appeler ton API ou filtrer une liste locale
-    print('Recherche : $searchText');
+  void applyFilters(
+      List<String> cuisines, List<String> types, List<String> options) {
+    setState(() {
+      selectedCuisines = cuisines;
+      selectedTypes = types;
+      selectedOptions = options;
+      showFilters = false;
+    });
+  }
+
+  void closeFiltersIfNeeded() {
+    if (showFilters) {
+      setState(() {
+        showFilters = false;
+        searchFocusNode.unfocus();
+      });
+    }
   }
 
   @override
@@ -54,10 +65,29 @@ class _PickMenuScaffoldState extends State<PickMenuScaffold> {
     return Scaffold(
       appBar: PickMenuAppBar(
         searchController: searchController,
-        onFilterTap: openFilterPanel,
-        onSearchChanged: updateSearch,
+        searchFocusNode: searchFocusNode,
+        onFilterTap: toggleFilters,
+        onSearchChanged: (value) {
+          print('Recherche : $value');
+        },
+        showFilters: showFilters,
       ),
-      body: widget.child, // Le contenu de la page reste fixe
+      body: GestureDetector(
+        onTap:
+            closeFiltersIfNeeded, // Fermer les filtres si on clique en dehors
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          children: [
+            if (showFilters)
+              GestureDetector(
+                onTap:
+                    () {}, // Empêche la fermeture en cliquant sur les filtres
+                child: FilterPanel(onApplyFilters: applyFilters),
+              ),
+            Expanded(child: widget.child), // Contenu principal
+          ],
+        ),
+      ),
     );
   }
 }
