@@ -6,6 +6,12 @@ class PickMenuColors {
   static const Color borderColor = Color(0xFF75A482);
   static const Color iconsColor = Color(0xFF75A482);
 
+  static const Color checkboxCheck = Color(0xFF3D6247);
+  static const Color checkboxUncheckedFill = Color(0xFFFFFFFF);
+  static const Color checkboxCheckedFill = Color(0xFFD7F0E0);
+  static const Color checkboxUncheckedBorder = Color(0xFF000000);
+  static const Color checkboxCheckedBorder = Color(0xFF3D6247);
+
   static const Color appBar = Color(0xFFFFFFFF);
 
   static const Color textFieldErrorBorder = Color(0xFFE57373);
