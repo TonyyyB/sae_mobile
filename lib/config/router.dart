@@ -7,7 +7,7 @@ import 'package:sae_mobile/src/screens/inscription_screen.dart';
 
 final GoRouter router = GoRouter(routes: [
   GoRoute(
-    path: '/s',
+    path: '/',
     builder: (context, state) => ConnexionScreen(),
   ),
   GoRoute(
@@ -15,7 +15,7 @@ final GoRouter router = GoRouter(routes: [
     builder: (context, state) => InscriptionScreen(),
   ),
   GoRoute(
-    path: '/',
+    path: '/home',
     builder: (context, state) => HomeScreen(),
   ),
   GoRoute(
