@@ -29,6 +29,34 @@ class PickMenuTheme {
         color: PickMenuColors.inputErrorText);
   }
 
+  static TextStyle elevatedButtonTextStyle() {
+    return TextStyle(
+        fontSize: 28.0,
+        height: 36.0 / 28.0,
+        letterSpacing: 0.0,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        color: PickMenuColors.buttonTextColor);
+  }
+
+  static TextStyle spanTextStyle() {
+    return TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        letterSpacing: 0.5,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        color: PickMenuColors.spanTextColor);
+  }
+
+  static TextStyle spanLinkTextStyle() {
+    return TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        letterSpacing: 0.5,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        decoration: TextDecoration.underline,
+        color: PickMenuColors.spanLinkColor);
+  }
+
   static ThemeData defaultTheme() {
     return ThemeData(
       scaffoldBackgroundColor: PickMenuColors.backgroundColor,
@@ -173,7 +201,7 @@ class PickMenuTheme {
             backgroundColor: WidgetStatePropertyAll(PickMenuColors.buttonColor),
             foregroundColor:
                 WidgetStatePropertyAll(PickMenuColors.buttonTextColor),
-            textStyle: WidgetStatePropertyAll(inputTextStyle()),
+            textStyle: WidgetStatePropertyAll(elevatedButtonTextStyle()),
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
                 side: BorderSide(color: PickMenuColors.buttonColor)))),
