@@ -2,24 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:sae_mobile/config/colors.dart';
 
 class PickMenuTheme {
-    static TextStyle inputHintTextStyle(){
-        return const TextStyle(
-              fontSize: 16.0,
-              height: 24.0 / 16.0,
-              letterSpacing: 0.5,
-              fontFamily: 'LXGWWenKaiMonoTC',
-              color: PickMenuColors.inputHint
-            );
-    }
-    static TextStyle inputErrorTextStyle(){
-        return const TextStyle(
-              fontSize: 16.0,
-              height: 24.0 / 16.0,
-              letterSpacing: 0.5,
-              fontFamily: 'LXGWWenKaiMonoTC',
-              color: PickMenuColors.inputErrorText
-            );
-    }
+  static TextStyle inputHintTextStyle() {
+    return const TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        letterSpacing: 0.5,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        color: PickMenuColors.inputHint);
+  }
+
+  static TextStyle inputTextStyle() {
+    return const TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        letterSpacing: 0.5,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        color: PickMenuColors.inputText);
+  }
+
+  static TextStyle inputErrorTextStyle() {
+    return const TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        letterSpacing: 0.5,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        color: PickMenuColors.inputErrorText);
+  }
+
   static ThemeData defaultTheme() {
     return ThemeData(
         textTheme: TextTheme(
@@ -121,73 +130,54 @@ class PickMenuTheme {
         ),
         inputDecorationTheme: InputDecorationTheme(
             hintStyle: inputHintTextStyle(),
-            contentPadding: EdgeInsets.only(
-                left: 20,
-                bottom: 9,
-                top: 9
-            ),
-            labelStyle: inputErrorTextStyle(),
+            labelStyle: inputTextStyle(),
+            contentPadding: EdgeInsets.only(left: 20, bottom: 9, top: 9),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(
-                    color: PickMenuColors.inputBorder,
-                    width: 2.5,
-                )
-            ),
+                  color: PickMenuColors.inputBorder,
+                  width: 2.5,
+                )),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(
-                    color: PickMenuColors.inputBorder,
-                    width: 2.5,
-                )
-            ),
+                  color: PickMenuColors.inputBorder,
+                  width: 2.5,
+                )),
             errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(
-                    color: PickMenuColors.inputErrorBorder,
-                    width: 2.5,
-                )
-            ),
+                  color: PickMenuColors.inputErrorBorder,
+                  width: 2.5,
+                )),
             focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(
-                    color: PickMenuColors.inputErrorBorder,
-                    width: 2.5,
-                )
-            ),
+                  color: PickMenuColors.inputErrorBorder,
+                  width: 2.5,
+                )),
             disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(
-                    color: PickMenuColors.inputDisabledBorder,
-                    width: 2.5,
-                )
-            ),
-            errorStyle: inputErrorTextStyle()
-        ),
-        textSelectionTheme: TextSelectionThemeData(
-            cursorColor: inputHintTextStyle().color),
+                  color: PickMenuColors.inputDisabledBorder,
+                  width: 2.5,
+                )),
+            errorStyle: inputErrorTextStyle()),
+        textSelectionTheme:
+            TextSelectionThemeData(cursorColor: inputTextStyle().color),
         elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-                padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 9, horizontal: 15)),
-                backgroundColor: WidgetStatePropertyAll(PickMenuColors.buttonColor),
-                foregroundColor: WidgetStatePropertyAll(PickMenuColors.buttonTextColor),
-                textStyle: WidgetStatePropertyAll(
-                    TextStyle(
-                        fontSize: 28.0,
-                        height: 36.0 / 28.0,
-                        letterSpacing: 0.0,
-                        fontFamily: 'LXGWWenKaiMonoTC',
-                        color: PickMenuColors.textColor
-                    )
-                ),
-                shape: WidgetStatePropertyAll(
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        side: BorderSide(color: PickMenuColors.buttonColor)
-                    )
-                )
-            ),
-        )
-        );
+          style: ButtonStyle(
+              padding: WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(vertical: 9, horizontal: 15)),
+              backgroundColor:
+                  WidgetStatePropertyAll(PickMenuColors.buttonColor),
+              foregroundColor:
+                  WidgetStatePropertyAll(PickMenuColors.buttonTextColor),
+              textStyle: WidgetStatePropertyAll(inputTextStyle()),
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                  side: BorderSide(color: PickMenuColors.buttonColor)))),
+        ),
+        scaffoldBackgroundColor: PickMenuColors.backgroundColor);
   }
 }
