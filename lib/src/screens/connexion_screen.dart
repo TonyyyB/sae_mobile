@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/config/colors.dart';
 import 'package:sae_mobile/config/images.dart';
+import 'package:sae_mobile/config/router.dart';
 import 'package:sae_mobile/config/theme.dart';
 
 class ConnexionScreen extends StatefulWidget {
@@ -73,7 +74,7 @@ class _ConnexionScreenState extends State<ConnexionScreen> {
                           style: PickMenuTheme.spanLinkTextStyle(),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              print("tap");
+                              router.go("/inscription");
                             })
                     ]))
                   ],
