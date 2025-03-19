@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/config/colors.dart';
 import 'package:sae_mobile/config/images.dart';
+import 'package:sae_mobile/config/router.dart';
 import 'package:sae_mobile/config/theme.dart';
 
 class InscriptionScreen extends StatefulWidget {
@@ -100,7 +101,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                           style: PickMenuTheme.spanLinkTextStyle(),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              print("tap");
+                              router.go("/");
                             })
                     ]))
                   ],
