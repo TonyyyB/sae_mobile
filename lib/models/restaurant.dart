@@ -44,13 +44,6 @@ class Restaurant {
     this.avis?.add(avis);
   }
 
-  String? normalizePhoneNumber(String? number){
-    if (number != null){
-      //la fonction chelou
-    }
-    return null;
-  }
-
   List<double> get getCoordinates{
     return [this.latitude, this.longitude];
   }
@@ -111,12 +104,35 @@ class Restaurant {
     return this.takeaway;
   }
 
+  String? get getCapacity{
+    return this.capacity;
+  }
 
-  //static List<Task> generateTask(int i){
-   // List<Task> tasks=[];
-   // for(int n=0;n<i;n++){
-   //   tasks.add(Task(id: n, title: "title $n", tags: ['tag $n','tag${n+1}'], nbhours: n, difficulty: n, description: '$n'));
-   // }
-   // return tasks;
-  //}
+  bool? get getDriveThrough{
+    return this.driveThrough;
+  }
+
+  String? get getphone{
+    return this.phone;
+  }
+
+  String? get getWebsite{
+    return this.website;
+  }
+
+  String? get getFacebook{
+    return this.facebook;
+  }
+
+  String get getRegion{
+    return this.region;
+  }
+
+  String get getDepartement{
+    return this.departement;
+  }
+
+  String get getCommune{
+    return this.commune;
+  }
 }
