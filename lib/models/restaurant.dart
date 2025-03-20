@@ -10,7 +10,7 @@ class Restaurant {
   String? brand;
   List<String>? openingHours;
   bool? wheelchair;
-  List<String> cuisine;
+  List<String>? cuisine;
   bool? vegetarian;
   bool? vegan;
   bool? delivery;
@@ -27,7 +27,7 @@ class Restaurant {
 
   Restaurant({required this.osmId,required this.longitude,required this.latitude,required
   this.type,required this.name , this.operator, this.brand, this.openingHours, this.wheelchair,
-  required this.cuisine, this.vegetarian, this.vegan, this.delivery, this.takeaway, this.capacity,
+  this.cuisine, this.vegetarian, this.vegan, this.delivery, this.takeaway, this.capacity,
   this.driveThrough, this.phone, this.website, this.facebook, required this.region, required this.departement,
   required this.commune, this.avis});
 
@@ -84,7 +84,7 @@ class Restaurant {
     return this.wheelchair;
   }
 
-  List<String> get getCuisine{
+  List<String>? get getCuisine{
     return this.cuisine;
   }
 
