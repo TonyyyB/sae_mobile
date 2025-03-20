@@ -1,138 +1,139 @@
 import 'avis.dart';
 
 class Restaurant {
-  String osmId;
-  double longitude;
-  double latitude;
-  String type;
-  String name;
-  String? operator;
-  String? brand;
-  List<String>? openingHours;
-  bool? wheelchair;
-  List<String>? cuisine;
-  bool? vegetarian;
-  bool? vegan;
-  bool? delivery;
-  bool? takeaway;
-  String? capacity;
-  bool? driveThrough;
-  String? phone;
-  String? website;
-  String? facebook;
-  String region;
-  String departement;
-  String commune;
-  List<Avis>? avis;
+  static Map<String, int> typesCuisine = {};
+  String _osmId;
+  double _longitude;
+  double _latitude;
+  String _type;
+  String _name;
+  String? _operator;
+  String? _brand;
+  List<String>? _openingHours;
+  bool? _wheelchair;
+  List<String>? _cuisine;
+  bool? _vegetarian;
+  bool? _vegan;
+  bool? _delivery;
+  bool? _takeaway;
+  String? _capacity;
+  bool? _driveThrough;
+  String? _phone;
+  String? _website;
+  String? _facebook;
+  String _region;
+  String _departement;
+  String _commune;
+  List<Avis>? _avis;
 
-  Restaurant({required this.osmId,required this.longitude,required this.latitude,required
-  this.type,required this.name , this.operator, this.brand, this.openingHours, this.wheelchair,
-  this.cuisine, this.vegetarian, this.vegan, this.delivery, this.takeaway, this.capacity,
-  this.driveThrough, this.phone, this.website, this.facebook, required this.region, required this.departement,
-  required this.commune, this.avis});
+  Restaurant({required String osmId,required double longitude,required double latitude,required
+  String type,required String name , String? operator, String? brand, List<String>? openingHours, bool? wheelchair,
+  List<String>? cuisine, bool? vegetarian, bool? vegan, bool? delivery, bool? takeaway, String? capacity,
+  bool? driveThrough, String? phone, String? website, String? facebook, required String region, required String departement,
+  required String commune, List<Avis>? avis}) : _avis = avis, _commune = commune, _departement = departement, _region = region, _facebook = facebook, _website = website, _phone = phone, _driveThrough = driveThrough, _capacity = capacity, _takeaway = takeaway, _delivery = delivery, _vegan = vegan, _vegetarian = vegetarian, _cuisine = cuisine, _wheelchair = wheelchair, _openingHours = openingHours, _brand = brand, _operator = operator, _name = name, _type = type, _latitude = latitude, _longitude = longitude, _osmId = osmId;
 
   set setAvis(List<Avis> listeAvis){
-    this.avis = listeAvis;
+    this._avis = listeAvis;
   }
 
   List<Avis>? get getAvis{
-    return this.avis;
+    return this._avis;
   }
 
   addAvis(Avis avis){
-    this.avis ??= [];
-    this.avis?.add(avis);
+    this._avis ??= [];
+    this._avis?.add(avis);
   }
 
   List<double> get getCoordinates{
-    return [this.latitude, this.longitude];
+    return [this._latitude, this._longitude];
   }
 
   double get getLatitude{
-    return this.latitude;
+    return this._latitude;
   }
 
   double get getLongitude{
-    return this.longitude;
+    return this._longitude;
   }
 
   List<String>? get getOpeningHours{
-    return this.openingHours;
+    return this._openingHours;
   }
 
   String get getOsmId{
-    return this.osmId;
+    return this._osmId;
   }
 
   String get getName{
-    return this.name;
+    return this._name;
   }
 
   String get getType{
-    return this.type;
+    return this._type;
   }
 
   String? get getOperator{
-    return this.operator;
+    return this._operator;
   }
 
   String? get getBrand{
-    return this.brand;
+    return this._brand;
   }
 
   bool? get getWheelchair{
-    return this.wheelchair;
+    return this._wheelchair;
   }
 
   List<String>? get getCuisine{
-    return this.cuisine;
+    return this._cuisine;
   }
 
   bool? get getVegetarian{
-    return this.vegetarian;
+    return this._vegetarian;
   }
 
   bool? get getVegan{
-    return this.vegan;
+    return this._vegan;
   }
 
   bool? get getDelivery{
-    return this.delivery;
+    return this._delivery;
   }
 
   bool? get getTakeaway{
-    return this.takeaway;
+    return this._takeaway;
   }
 
   String? get getCapacity{
-    return this.capacity;
+    return this._capacity;
   }
 
   bool? get getDriveThrough{
-    return this.driveThrough;
+    return this._driveThrough;
   }
 
   String? get getphone{
-    return this.phone;
+    return this._phone;
   }
 
   String? get getWebsite{
-    return this.website;
+    return this._website;
   }
 
   String? get getFacebook{
-    return this.facebook;
+    return this._facebook;
   }
 
   String get getRegion{
-    return this.region;
+    return this._region;
   }
 
   String get getDepartement{
-    return this.departement;
+    return this._departement;
   }
 
   String get getCommune{
-    return this.commune;
+    return this._commune;
   }
 }
