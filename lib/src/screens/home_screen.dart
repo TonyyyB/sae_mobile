@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
     return PickMenuScaffold(
       child: Row(
         children: [
-          NoteEtoile(rating: 2.00001)
+          Text("Bonjour")
         ],
       )
 
