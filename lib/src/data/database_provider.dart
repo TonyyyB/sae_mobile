@@ -138,7 +138,7 @@ class DatabaseProvider {
 
       final response = await supabase.from('commentaire').insert({
         'osm_id': id,
-        'uuid': avis.utilisateur,
+        'uuid': supabase.auth.currentUser!.id,
         'commentaire': avis.commentaire,
         'note': avis.note,
         'photo': imagePath,
@@ -152,10 +152,10 @@ class DatabaseProvider {
     }
   }
 
-  Future<void> ajouterFavoriRestaurant(String userId, int restaurantId) async {
+  Future<void> ajouterFavoriRestaurant(int restaurantId) async {
     try {
       final response = await supabase.from('favoris').insert({
-        'uuid': userId,
+        'uuid': supabase.auth.currentUser?.id,
         'osm_id': restaurantId,
       });
 
@@ -167,22 +167,22 @@ class DatabaseProvider {
     }
   }
 
-  Future<void> ajouterCuisineFavorite(String userId, String nomCuisine) async {
+  Future<void> ajouterCuisineFavorite(String nomCuisine) async {
     try {
       final data = await supabase
           .from('style_cuisine')
-          .select('id')
+          .select(supabase.auth.currentUser!.id)
           .eq('nom_cuisine', nomCuisine)
           .single();
 
-      if (data == null || data['id'] == null) {
+      if (data == null || data[supabase.auth.currentUser!.id] == null) {
         throw Exception('Style de cuisine non trouvé');
       }
 
-      int idStyleCuisine = data['id'];
+      int idStyleCuisine = data[supabase.auth.currentUser!.id];
 
       final response = await supabase.from('favoris_cuisine').insert({
-        'uuid': userId,
+        'uuid': supabase.auth.currentUser?.id,
         'id_style_cuisine': idStyleCuisine,
       });
 
