@@ -97,4 +97,23 @@ class DatabaseProvider {
       );
     }
   }
+
+  Future<void> ajouterAvisRestaurant(int id, Avis avis) async {
+    try {
+      final response = await supabase.from('commentaire').insert({
+        'osm_id': id,
+        'uuid': avis.utilisateur,
+        'commentaire': avis.commentaire,
+        'note': avis.note,
+        'photo': avis.image,
+      });
+
+      if (response.error != null) {
+        throw Exception('Erreur lors de l\'ajout de l\'avis : ${response.error!.message}');
+      }
+    } catch (e) {
+      print('Erreur: $e');
+    }
+  }
+
 }
