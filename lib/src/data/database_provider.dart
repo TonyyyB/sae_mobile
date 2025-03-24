@@ -157,5 +157,21 @@ class DatabaseProvider {
     }
   }
 
+  Future<void> ajouterFavoriRestaurant(String userId, int restaurantId) async {
+    try {
+      final response = await supabase.from('favoris').insert({
+        'uuid': userId,
+        'osm_id': restaurantId,
+      });
+
+      if (response.error != null) {
+        throw Exception('Erreur lors de l\'ajout en favori : ${response.error!.message}');
+      }
+    } catch (e) {
+      print('Erreur: $e');
+    }
+  }
+
+
 
 }
