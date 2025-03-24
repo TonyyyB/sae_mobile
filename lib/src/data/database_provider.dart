@@ -124,7 +124,7 @@ class DatabaseProvider {
 
       if (imageBytes != null && imageName != null) {
         final storageResponse = await supabase.storage
-            .from('nom_de_ton_bucket') // Remplace par ton bucket
+            .from('photos') // Remplace par ton bucket
             .upload('avis/$imageName', imageBytes);
 
         if (storageResponse.isEmpty) {
@@ -154,7 +154,7 @@ class DatabaseProvider {
 
   Future<void> ajouterFavoriRestaurant(int restaurantId) async {
     try {
-      final response = await supabase.from('favoris').insert({
+      final response = await supabase.from('favoris_restaurant').insert({
         'uuid': supabase.auth.currentUser?.id,
         'osm_id': restaurantId,
       });
@@ -172,7 +172,7 @@ class DatabaseProvider {
       final data = await supabase
           .from('style_cuisine')
           .select(supabase.auth.currentUser!.id)
-          .eq('nom_cuisine', nomCuisine)
+          .eq('nom_style', nomCuisine)
           .single();
 
       if (data == null || data[supabase.auth.currentUser!.id] == null) {
@@ -181,9 +181,9 @@ class DatabaseProvider {
 
       int idStyleCuisine = data[supabase.auth.currentUser!.id];
 
-      final response = await supabase.from('favoris_cuisine').insert({
+      final response = await supabase.from('favoris_style').insert({
         'uuid': supabase.auth.currentUser?.id,
-        'id_style_cuisine': idStyleCuisine,
+        'style_id': idStyleCuisine,
       });
 
       if (response.error != null) {
