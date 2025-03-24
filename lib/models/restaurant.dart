@@ -1,7 +1,6 @@
 import 'avis.dart';
 
 class Restaurant {
-  static Map<String, int> typesCuisine = {};
   final String _osmId;
   final double _longitude;
   final double _latitude;
@@ -177,5 +176,10 @@ class Restaurant {
 
   String get getCommune {
     return _commune;
+  }
+
+  @override
+  String toString() {
+    return this._name;
   }
 }
