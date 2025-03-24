@@ -86,17 +86,39 @@ class DatabaseProvider {
     }
   }
 
-  Future<List<Avis>?> getAVisRestaurant(int id) async {
-    final data = await supabase.from('commentaire').select().filter('osm_id', 'eq', id);
+  Future<List<Avis>> getAvisRestaurant(int id) async {
+    final data = await supabase
+        .from('commentaire')
+        .select()
+        .eq('osm_id', id);
+
+    List<Avis> avisList = [];
+
     for (var res in data) {
+      String? photoUrl;
+
+      if (res['photo'] != null && res['photo'] != '') {
+
+        photoUrl = supabase.storage
+            .from('photos')
+            .getPublicUrl(res['photo']);
+      }
+
       Avis avis = Avis(
         utilisateur: res['uuid'],
         commentaire: res['commentaire'],
         note: res['note'],
-        image: res['photo'],
+        image: photoUrl,
       );
+
+      avisList.add(avis);
     }
+
+    return avisList;
   }
+
+
+
 
   Future<void> ajouterAvisRestaurant(int id, Avis avis) async {
     try {
