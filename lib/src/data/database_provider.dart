@@ -1,3 +1,4 @@
+import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/models/restaurant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -82,6 +83,18 @@ class DatabaseProvider {
         departement: res['departement'],
         commune: res['commune'],
       );*/
+    }
+  }
+
+  Future<List<Avis>?> getAVisRestaurant(int id) async {
+    final data = await supabase.from('commentaire').select().filter('osm_id', 'eq', id);
+    for (var res in data) {
+      Avis avis = Avis(
+        utilisateur: res['uuid'],
+        commentaire: res['commentaire'],
+        note: res['note'],
+        image: res['photo'],
+      );
     }
   }
 }
