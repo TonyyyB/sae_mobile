@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
+
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/models/restaurant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -120,14 +122,31 @@ class DatabaseProvider {
 
 
 
-  Future<void> ajouterAvisRestaurant(int id, Avis avis) async {
+  Future<void> ajouterAvisRestaurant(int id, Avis avis, Uint8List? imageBytes, String? imageName) async {
     try {
+      String? imagePath;
+
+
+      if (imageBytes != null && imageName != null) {
+        final storageResponse = await supabase.storage
+            .from('nom_de_ton_bucket') // Remplace par ton bucket
+            .upload('avis/$imageName', imageBytes);
+
+        if (storageResponse.isEmpty) {
+          throw Exception('Échec de l\'upload de l\'image');
+        }
+
+
+        imagePath = 'avis/$imageName';
+      }
+
+
       final response = await supabase.from('commentaire').insert({
         'osm_id': id,
         'uuid': avis.utilisateur,
         'commentaire': avis.commentaire,
         'note': avis.note,
-        'photo': avis.image,
+        'photo': imagePath,
       });
 
       if (response.error != null) {
@@ -137,5 +156,6 @@ class DatabaseProvider {
       print('Erreur: $e');
     }
   }
+
 
 }
