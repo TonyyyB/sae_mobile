@@ -117,15 +117,16 @@ class DatabaseProvider {
 
 
 
-  Future<void> ajouterAvisRestaurant(int id, Avis avis, Uint8List? imageBytes, String? imageName) async {
+  Future<void> ajouterAvisRestaurant(Restaurant restaurant, Avis avis, Uint8List? imageBytes, String? imageName) async {
     try {
       String? imagePath;
 
+      String id = restaurant.getOsmId;
 
       if (imageBytes != null && imageName != null) {
         final storageResponse = await supabase.storage
             .from('photos') // Remplace par ton bucket
-            .upload('avis/$imageName', imageBytes);
+            .upload("id/$imageName", imageBytes);
 
         if (storageResponse.isEmpty) {
           throw Exception('Échec de l\'upload de l\'image');
