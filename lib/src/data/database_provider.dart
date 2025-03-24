@@ -167,6 +167,30 @@ class DatabaseProvider {
     }
   }
 
+  Future<void> ajouterCuisineFavorite(String userId, String nomCuisine) async {
+    try {
+      final data = await supabase
+          .from('style_cuisine')
+          .select('id')
+          .eq('nom_cuisine', nomCuisine)
+          .single();
 
+      if (data == null || data['id'] == null) {
+        throw Exception('Style de cuisine non trouvé');
+      }
 
+      int idStyleCuisine = data['id'];
+
+      final response = await supabase.from('favoris_cuisine').insert({
+        'uuid': userId,
+        'id_style_cuisine': idStyleCuisine,
+      });
+
+      if (response.error != null) {
+        throw Exception('Erreur lors de l\'ajout de la cuisine favorite : ${response.error!.message}');
+      }
+    } catch (e) {
+      print('Erreur: $e');
+    }
+  }
 }
