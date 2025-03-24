@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/src/widgets/restaurant_card.dart';
 import 'package:sae_mobile/src/widgets/scaffold.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -7,7 +8,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PickMenuScaffold(
-      child: const Text("Coucou"),
+      child: RestaurantCard(),
     );
   }
 }
