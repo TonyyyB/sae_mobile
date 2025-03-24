@@ -46,28 +46,21 @@ class DatabaseProvider {
     await supabase.auth.signOut();
   }
 
-  Future<void> fetchCuisines() async {
-    final data = await supabase.from('style_cuisine').select();
-    Restaurant.typesCuisine = {};
-    for (var cuisine in data) {
-      Restaurant.typesCuisine[cuisine["nom_style"]] = cuisine["style_id"];
-    }
-  }
-
-  Future<String?> getCuisine(int id) async {
-    final data =
-        await supabase.from('style_cuisine').select().eq('style_id', id);
-    return data[0]["nom_style"];
-  }
-
-  getAllRestaurants() async {
-    final data = await supabase.from('restaurant').select();
+  Future<List<Restaurant>> getAllRestaurants() async {
+    final data = await supabase.from('restaurant').select(
+        "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style)");
+    List<Restaurant> restaurants = [];
     for (var res in data) {
-      /*Restaurant restaurant = Restaurant(
-        osmId: res['osm_id'],
+      List<String> cuisines = [];
+      for (var cuisine in res['style_cuisine']) {
+        cuisines.add(cuisine['nom_style']);
+      }
+      Restaurant restaurant = Restaurant(
+        osmId: res['osm_id'].toString(),
         longitude: res['longitude'],
         latitude: res['latitude'],
-        type: res['type_id'],
+        type: res['type_restaurant']['nom_type'],
+        cuisine: cuisines,
         name: res['nom_res'],
         operator: res['operator'],
         brand: res['brand'],
@@ -84,8 +77,10 @@ class DatabaseProvider {
         region: res['region'],
         departement: res['departement'],
         commune: res['commune'],
-      );*/
+      );
+      restaurants.add(restaurant);
     }
+    return restaurants;
   }
 
   Future<List<Avis>> getAvisRestaurant(int id) async {

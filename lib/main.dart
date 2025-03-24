@@ -12,7 +12,7 @@ Future<void> main() async {
       url: dotenv.env['DB_URL']!, anonKey: dotenv.env['DB_KEY']!);
   await DatabaseProvider()
       .signIn(email: "tony.beaujouan2@gmail.com", password: "motdepasse");
-  DatabaseProvider().fetchCuisines();
+  print(await DatabaseProvider().getAllRestaurants());
   runApp(MyApp());
 }
 
