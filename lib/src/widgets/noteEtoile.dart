@@ -29,7 +29,7 @@ class SingleRatingIcon extends StatelessWidget {
       child: SizedBox(
         width: size,
         height: size,
-        child: Icon(icon, size: size, color: Colors.grey[300]),
+        child: Icon(icon, size: size, color: PickMenuColors.inputDisabledBorder),
       ),
     );
   }
@@ -50,13 +50,13 @@ class NoteEtoile extends StatelessWidget{
     );
     for (var i = 0; i < 5; i++) {
       if (cpt>=1){
-      res.children.add(star);
+      res.children.add(Icon(color:iconColor,size: size, IconData(0xe5f9, fontFamily: 'MaterialIcons')));
       cpt--;
       }else if(cpt>0) {
         res.children.add(SingleRatingIcon(icon: Icons.star, size: size, iconColor: PickMenuColors.iconsColor, rating: cpt));
         cpt = 0;
       }else if (cpt==0){
-        res.children.add(star_empty);
+        res.children.add(Icon(color:PickMenuColors.inputDisabledBorder,size: size,IconData(0xe5f9, fontFamily: 'MaterialIcons')));
       }
 
     }
