@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../config/colors.dart';
@@ -19,10 +21,11 @@ class RestaurantCard extends StatelessWidget {
                     ),
                   ),
                   margin : EdgeInsets.fromLTRB(40, 20, 40, 20),
-                  child: const Padding(
-                      padding : EdgeInsets.fromLTRB(0, 0, 0, 20),
+                  child: Padding(
+                      padding : const EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child : Row(
-                        children :[Text('Nom du restau', style: TextStyle(color: PickMenuColors.textColor, fontSize: 24))]
+                        children :[TextButton(onPressed: () {}, child: const Text('Nom du restau', style: TextStyle(color: PickMenuColors.textColor, fontSize: 24)))
+                          ]
                       ),
                   ),
                   ),
