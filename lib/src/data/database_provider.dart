@@ -144,40 +144,6 @@ class DatabaseProvider {
     return avisList;
   }
 
-  /*Future<void> ajouterAvisRestaurant(Restaurant restaurant, Avis avis,
-      Uint8List? imageBytes, String? imageName) async {
-    try {
-      String? imagePath;
-
-      if (imageBytes != null && imageName != null) {
-        final storageResponse = await supabase.storage
-            .from('nom_de_ton_bucket') // Remplace par ton bucket
-            .upload('avis/$imageName', imageBytes);
-
-        if (storageResponse.isEmpty) {
-          throw Exception('Échec de l\'upload de l\'image');
-        }
-
-        imagePath = 'avis/$imageName';
-      }
-
-      final response = await supabase.from('commentaire').insert({
-        'osm_id': id,
-        'uuid': supabase.auth.currentUser!.id,
-        'commentaire': avis.commentaire,
-        'note': avis.note,
-        'photo': 'uuid',
-      });
-
-      if (response.error != null) {
-        throw Exception(
-            'Erreur lors de l\'ajout de l\'avis : ${response.error!.message}');
-      }
-    } catch (e) {
-      print('Erreur: $e');
-    }
-  }*/
-
   Future<int?> getCuisineId(String nomCuisine) async {
     return (await supabase
         .from('style_cuisine')
@@ -186,27 +152,27 @@ class DatabaseProvider {
         .single())['style_id'];
   }
 
-  Future<bool> addFavoriRestaurant(int restaurantId) async {
-    bool ok = true;
+  Future<String?> addFavoriRestaurant(int restaurantId) async {
+    String? err;
     await supabase.from('favoris_restaurant').insert({
       'uuid': getUser()?.id,
       'osm_id': restaurantId,
     }).onError((error, stackTrace) {
-      ok = false;
+      err = error.toString();
     });
-    return ok;
+    return err;
   }
 
-  Future<bool> addCuisineFavorite(String nomCuisine) async {
+  Future<String?> addCuisineFavorite(String nomCuisine) async {
     int? styleId = await getCuisineId(nomCuisine);
-    if (styleId == null) return false;
-    bool ok = true;
+    if (styleId == null) return "Style de cuisine non trouvé !";
+    String? err;
     await supabase.from('favoris_style').insert({
       'uuid': getUser()?.id,
       'style_id': styleId,
     }).onError((error, stackTrace) {
-      ok = false;
+      err = error.toString();
     });
-    return ok;
+    return err;
   }
 }
