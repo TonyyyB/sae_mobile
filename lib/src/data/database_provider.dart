@@ -1,4 +1,4 @@
-import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
+import 'dart:io';
 
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/models/restaurant.dart';
@@ -84,21 +84,16 @@ class DatabaseProvider {
   }
 
   Future<List<Avis>> getAvisRestaurant(int id) async {
-    final data = await supabase
-        .from('commentaire')
-        .select()
-        .eq('osm_id', id);
+    final data = await supabase.from('commentaire').select().eq('osm_id', id);
 
     List<Avis> avisList = [];
 
-    for (var res in data) {
-      String? photoUrl;
+    /*for (var res in data) {
+      File? photo;
 
       if (res['photo'] != null && res['photo'] != '') {
-
-        photoUrl = supabase.storage
-            .from('photos')
-            .getPublicUrl(res['photo']);
+        final photoData = await supabase.storage.from('photos').download();
+        final tempDir = File.fromRawPath();
       }
 
       Avis avis = Avis(
@@ -109,7 +104,7 @@ class DatabaseProvider {
       );
 
       avisList.add(avis);
-    }
+    }*/
 
     return avisList;
   }
@@ -121,12 +116,11 @@ class DatabaseProvider {
     try {
       String? imagePath;
 
-      String id = restaurant.getOsmId;
 
       if (imageBytes != null && imageName != null) {
         final storageResponse = await supabase.storage
-            .from('photos') // Remplace par ton bucket
-            .upload("id/$imageName", imageBytes);
+            .from('nom_de_ton_bucket') // Remplace par ton bucket
+            .upload('avis/$imageName', imageBytes);
 
         if (storageResponse.isEmpty) {
           throw Exception('Échec de l\'upload de l\'image');
@@ -142,56 +136,17 @@ class DatabaseProvider {
         'uuid': supabase.auth.currentUser!.id,
         'commentaire': avis.commentaire,
         'note': avis.note,
-        'photo': imagePath,
+        'photo': 'uuid',
       });
 
       if (response.error != null) {
-        throw Exception('Erreur lors de l\'ajout de l\'avis : ${response.error!.message}');
+        throw Exception(
+            'Erreur lors de l\'ajout de l\'avis : ${response.error!.message}');
       }
     } catch (e) {
       print('Erreur: $e');
     }
   }
 
-  Future<void> ajouterFavoriRestaurant(int restaurantId) async {
-    try {
-      final response = await supabase.from('favoris_restaurant').insert({
-        'uuid': supabase.auth.currentUser?.id,
-        'osm_id': restaurantId,
-      });
 
-      if (response.error != null) {
-        throw Exception('Erreur lors de l\'ajout en favori : ${response.error!.message}');
-      }
-    } catch (e) {
-      print('Erreur: $e');
-    }
-  }
-
-  Future<void> ajouterCuisineFavorite(String nomCuisine) async {
-    try {
-      final data = await supabase
-          .from('style_cuisine')
-          .select(supabase.auth.currentUser!.id)
-          .eq('nom_style', nomCuisine)
-          .single();
-
-      if (data == null || data[supabase.auth.currentUser!.id] == null) {
-        throw Exception('Style de cuisine non trouvé');
-      }
-
-      int idStyleCuisine = data[supabase.auth.currentUser!.id];
-
-      final response = await supabase.from('favoris_style').insert({
-        'uuid': supabase.auth.currentUser?.id,
-        'style_id': idStyleCuisine,
-      });
-
-      if (response.error != null) {
-        throw Exception('Erreur lors de l\'ajout de la cuisine favorite : ${response.error!.message}');
-      }
-    } catch (e) {
-      print('Erreur: $e');
-    }
-  }
 }
