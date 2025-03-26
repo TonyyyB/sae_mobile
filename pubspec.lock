@@ -73,6 +73,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+<<<<<<< HEAD
   cross_file:
     dependency: transitive
     description:
@@ -89,6 +90,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
+=======
+>>>>>>> b7a0802 (Modification du model)
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -105,6 +108,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+<<<<<<< HEAD
   ffi:
     dependency: transitive
     description:
@@ -153,6 +157,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+4"
+=======
+>>>>>>> b7a0802 (Modification du model)
   flutter:
     dependency: "direct main"
     description: flutter
@@ -384,6 +390,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+<<<<<<< HEAD
   mime:
     dependency: transitive
     description:
@@ -392,6 +399,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+=======
+>>>>>>> b7a0802 (Modification du model)
   path:
     dependency: "direct main"
     description:
@@ -400,6 +409,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+<<<<<<< HEAD
   path_provider:
     dependency: "direct main"
     description:
@@ -448,6 +458,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+=======
+>>>>>>> b7a0802 (Modification du model)
   platform:
     dependency: transitive
     description:
@@ -613,6 +625,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.1"
+<<<<<<< HEAD
   storage_client:
     dependency: transitive
     description:
@@ -621,6 +634,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+=======
+>>>>>>> b7a0802 (Modification du model)
   stream_channel:
     dependency: transitive
     description:
@@ -637,6 +652,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+<<<<<<< HEAD
   supabase:
     dependency: transitive
     description:
@@ -653,6 +669,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.8.4"
+=======
+>>>>>>> b7a0802 (Modification du model)
   synchronized:
     dependency: transitive
     description:
@@ -677,6 +695,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.4"
+<<<<<<< HEAD
   typed_data:
     dependency: transitive
     description:
@@ -749,6 +768,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
+=======
+>>>>>>> b7a0802 (Modification du model)
   vector_math:
     dependency: transitive
     description:
@@ -765,6 +786,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.1"
+<<<<<<< HEAD
   web:
     dependency: transitive
     description:
@@ -808,3 +830,8 @@ packages:
 sdks:
   dart: ">=3.7.0-0 <4.0.0"
   flutter: ">=3.27.0"
+=======
+sdks:
+  dart: ">=3.7.0-0 <4.0.0"
+  flutter: ">=3.24.0"
+>>>>>>> b7a0802 (Modification du model)
