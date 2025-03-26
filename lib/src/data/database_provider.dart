@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/models/restaurant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -42,6 +40,10 @@ class DatabaseProvider {
 
   bool isAuthenticated() => supabase.auth.currentSession != null;
 
+  User? getUser() {
+    return supabase.auth.currentUser;
+  }
+
   Future<void> signOut() async {
     await supabase.auth.signOut();
   }
@@ -56,7 +58,7 @@ class DatabaseProvider {
         cuisines.add(cuisine['nom_style']);
       }
       Restaurant restaurant = Restaurant(
-        osmId: res['osm_id'].toString(),
+        osmId: res['osm_id'],
         longitude: res['longitude'],
         latitude: res['latitude'],
         type: res['type_restaurant']['nom_type'],
@@ -83,33 +85,66 @@ class DatabaseProvider {
     return restaurants;
   }
 
-  Future<List<Avis>> getAvisRestaurant(int id) async {
-    final data = await supabase.from('commentaire').select().eq('osm_id', id);
+  Future<Restaurant?> getRestaurantById(int osmId) async {
+    final rawData = await supabase
+        .from('restaurant')
+        .select(
+            "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style)")
+        .eq('osm_id', osmId);
+    final data = rawData[0];
+    List<String> cuisines = [];
+    for (var cuisine in data['style_cuisine']) {
+      cuisines.add(cuisine['nom_style']);
+    }
+    Restaurant restaurant = Restaurant(
+      osmId: data['osm_id'],
+      longitude: data['longitude'],
+      latitude: data['latitude'],
+      type: data['type_restaurant']['nom_type'],
+      cuisine: cuisines,
+      name: data['nom_res'],
+      operator: data['operator'],
+      brand: data['brand'],
+      wheelchair: data['wheelchair'],
+      vegetarian: data['vegetarien'],
+      vegan: data['vegan'],
+      delivery: data['delivery'],
+      takeaway: data['takeaway'],
+      capacity: data['capacity'],
+      driveThrough: data['drive_through'],
+      phone: data['phone'],
+      website: data['website'],
+      facebook: data['facebook'],
+      region: data['region'],
+      departement: data['departement'],
+      commune: data['commune'],
+    );
+    return restaurant;
+  }
+
+  Future<List<Avis>> getAvisRestaurant(Restaurant restaurant) async {
+    final data = await supabase
+        .from('commentaire')
+        .select()
+        .eq('osm_id', restaurant.osmId);
 
     List<Avis> avisList = [];
 
-    /*for (var res in data) {
-      File? photo;
-
-      if (res['photo'] != null && res['photo'] != '') {
-        final photoData = await supabase.storage.from('photos').download();
-        final tempDir = File.fromRawPath();
-      }
-
+    for (Map<String, dynamic> avisData in data) {
       Avis avis = Avis(
-        utilisateur: res['uuid'],
-        commentaire: res['commentaire'],
-        note: res['note'],
-        image: photoUrl,
-      );
-
+          id: avisData['com_id'],
+          uuid: avisData['uuid'],
+          restaurant: restaurant,
+          note: avisData['note'],
+          commentaire: avisData['commentaire'],
+          photo: avisData['photo']);
       avisList.add(avis);
-    }*/
+    }
 
     return avisList;
   }
 
-  Future<void> ajouterAvisRestaurant(Restaurant restaurant, Avis avis,
+  /*Future<void> ajouterAvisRestaurant(Restaurant restaurant, Avis avis,
       Uint8List? imageBytes, String? imageName) async {
     try {
       String? imagePath;
@@ -141,49 +176,37 @@ class DatabaseProvider {
     } catch (e) {
       print('Erreur: $e');
     }
+  }*/
+
+  Future<int?> getCuisineId(String nomCuisine) async {
+    return (await supabase
+        .from('style_cuisine')
+        .select('style_id')
+        .eq('nom_style', nomCuisine)
+        .single())['style_id'];
   }
 
-  Future<void> ajouterFavoriRestaurant(int restaurantId) async {
-    try {
-      final response = await supabase.from('favoris_restaurant').insert({
-        'uuid': supabase.auth.currentUser?.id,
-        'osm_id': restaurantId,
-      });
-
-      if (response.error != null) {
-        throw Exception(
-            'Erreur lors de l\'ajout en favori : ${response.error!.message}');
-      }
-    } catch (e) {
-      print('Erreur: $e');
-    }
+  Future<bool> addFavoriRestaurant(int restaurantId) async {
+    bool ok = true;
+    await supabase.from('favoris_restaurant').insert({
+      'uuid': getUser()?.id,
+      'osm_id': restaurantId,
+    }).onError((error, stackTrace) {
+      ok = false;
+    });
+    return ok;
   }
 
-  Future<void> ajouterCuisineFavorite(String nomCuisine) async {
-    try {
-      final data = await supabase
-          .from('style_cuisine')
-          .select(supabase.auth.currentUser!.id)
-          .eq('nom_style', nomCuisine)
-          .single();
-
-      if (data == null || data[supabase.auth.currentUser!.id] == null) {
-        throw Exception('Style de cuisine non trouvé');
-      }
-
-      int idStyleCuisine = data[supabase.auth.currentUser!.id];
-
-      final response = await supabase.from('favoris_style').insert({
-        'uuid': supabase.auth.currentUser?.id,
-        'style_id': idStyleCuisine,
-      });
-
-      if (response.error != null) {
-        throw Exception(
-            'Erreur lors de l\'ajout de la cuisine favorite : ${response.error!.message}');
-      }
-    } catch (e) {
-      print('Erreur: $e');
-    }
+  Future<bool> addCuisineFavorite(String nomCuisine) async {
+    int? styleId = await getCuisineId(nomCuisine);
+    if (styleId == null) return false;
+    bool ok = true;
+    await supabase.from('favoris_style').insert({
+      'uuid': getUser()?.id,
+      'style_id': styleId,
+    }).onError((error, stackTrace) {
+      ok = false;
+    });
+    return ok;
   }
 }

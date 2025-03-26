@@ -1,7 +1,7 @@
 import 'avis.dart';
 
 class Restaurant {
-  final String _osmId;
+  final int _osmId;
   final double _longitude;
   final double _latitude;
   final String _type;
@@ -10,7 +10,7 @@ class Restaurant {
   final String? _brand;
   final List<String>? _openingHours;
   final bool? _wheelchair;
-  final List<String>? _cuisine;
+  List<String>? _cuisine;
   final bool? _vegetarian;
   final bool? _vegan;
   final bool? _delivery;
@@ -26,7 +26,7 @@ class Restaurant {
   List<Avis>? _avis;
 
   Restaurant(
-      {required String osmId,
+      {required int osmId,
       required double longitude,
       required double latitude,
       required String type,
@@ -73,113 +73,45 @@ class Restaurant {
         _longitude = longitude,
         _osmId = osmId;
 
-  set setAvis(List<Avis> listeAvis) {
-    _avis = listeAvis;
-  }
+  int get osmId => _osmId;
+  double get longitude => _longitude;
+  double get latitude => _latitude;
+  String get type => _type;
+  String get name => _name;
+  String? get operator => _operator;
+  String? get brand => _brand;
+  List<String>? get openingHours => _openingHours;
+  bool? get wheelchair => _wheelchair;
+  List<String>? get cuisine => _cuisine;
+  bool? get vegetarian => _vegetarian;
+  bool? get vegan => _vegan;
+  bool? get delivery => _delivery;
+  bool? get takeaway => _takeaway;
+  String? get capacity => _capacity;
+  bool? get driveThrough => _driveThrough;
+  String? get phone => _phone;
+  String? get website => _website;
+  String? get facebook => _facebook;
+  String get region => _region;
+  String get departement => _departement;
+  String get commune => _commune;
+  List<Avis>? get avis => _avis;
 
-  List<Avis>? get getAvis {
-    return _avis;
-  }
+  set cuisine(List<String>? value) => _cuisine = value;
+  set avis(List<Avis>? value) => _avis = value;
 
-  addAvis(Avis avis) {
+  void addAvis(Avis avis) {
     _avis ??= [];
-    _avis?.add(avis);
+    _avis!.add(avis);
   }
 
-  List<double> get getCoordinates {
-    return [_latitude, _longitude];
-  }
-
-  double get getLatitude {
-    return _latitude;
-  }
-
-  double get getLongitude {
-    return _longitude;
-  }
-
-  List<String>? get getOpeningHours {
-    return _openingHours;
-  }
-
-  String get getOsmId {
-    return _osmId;
-  }
-
-  String get getName {
-    return _name;
-  }
-
-  String get getType {
-    return _type;
-  }
-
-  String? get getOperator {
-    return _operator;
-  }
-
-  String? get getBrand {
-    return _brand;
-  }
-
-  bool? get getWheelchair {
-    return _wheelchair;
-  }
-
-  List<String>? get getCuisine {
-    return _cuisine;
-  }
-
-  bool? get getVegetarian {
-    return _vegetarian;
-  }
-
-  bool? get getVegan {
-    return _vegan;
-  }
-
-  bool? get getDelivery {
-    return _delivery;
-  }
-
-  bool? get getTakeaway {
-    return _takeaway;
-  }
-
-  String? get getCapacity {
-    return _capacity;
-  }
-
-  bool? get getDriveThrough {
-    return _driveThrough;
-  }
-
-  String? get getphone {
-    return _phone;
-  }
-
-  String? get getWebsite {
-    return _website;
-  }
-
-  String? get getFacebook {
-    return _facebook;
-  }
-
-  String get getRegion {
-    return _region;
-  }
-
-  String get getDepartement {
-    return _departement;
-  }
-
-  String get getCommune {
-    return _commune;
+  void addCuisine(String cuisineItem) {
+    _cuisine ??= [];
+    _cuisine!.add(cuisineItem);
   }
 
   @override
   String toString() {
-    return this._name;
+    return 'Restaurant{name: $_name, type: $_type, region: $_region, departement: $_departement, commune: $_commune, cuisine: $_cuisine, vegetarian: $_vegetarian, vegan: $_vegan, delivery: $_delivery, takeaway: $_takeaway, phone: $_phone, website: $_website}';
   }
 }
