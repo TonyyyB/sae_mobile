@@ -5,14 +5,9 @@ import 'package:sae_mobile/models/restaurant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseProvider {
-  static final DatabaseProvider _instance = DatabaseProvider._internal();
-  factory DatabaseProvider() => _instance;
+  static final SupabaseClient supabase = Supabase.instance.client;
 
-  final SupabaseClient supabase = Supabase.instance.client;
-
-  DatabaseProvider._internal();
-
-  Future<String?> signIn(
+  static Future<String?> signIn(
       {required String email, required String password}) async {
     try {
       final response = await supabase.auth
@@ -26,7 +21,7 @@ class DatabaseProvider {
     }
   }
 
-  Future<String?> signUp(
+  static Future<String?> signUp(
       {required String email, required String password}) async {
     try {
       final response =
@@ -40,17 +35,17 @@ class DatabaseProvider {
     }
   }
 
-  bool isAuthenticated() => supabase.auth.currentSession != null;
+  static bool isAuthenticated() => supabase.auth.currentSession != null;
 
-  User? getUser() {
+  static User? getUser() {
     return supabase.auth.currentUser;
   }
 
-  Future<void> signOut() async {
+  static Future<void> signOut() async {
     await supabase.auth.signOut();
   }
 
-  Future<List<Restaurant>> getAllRestaurants() async {
+  static Future<List<Restaurant>> getAllRestaurants() async {
     final data = await supabase.from('restaurant').select(
         "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style)");
     List<Restaurant> restaurants = [];
@@ -87,7 +82,7 @@ class DatabaseProvider {
     return restaurants;
   }
 
-  Future<Restaurant?> getRestaurantById(int osmId) async {
+  static Future<Restaurant?> getRestaurantById(int osmId) async {
     final rawData = await supabase
         .from('restaurant')
         .select(
@@ -124,7 +119,7 @@ class DatabaseProvider {
     return restaurant;
   }
 
-  Future<List<Avis>> getAvisRestaurant(Restaurant restaurant) async {
+  static Future<List<Avis>> getAvisRestaurant(Restaurant restaurant) async {
     final data = await supabase
         .from('commentaire')
         .select()
@@ -147,11 +142,11 @@ class DatabaseProvider {
   }
 
 // TODO
-  Future<String?> postAvisRestaurant(Avis avis, File photo) async {
+  static Future<String?> postAvisRestaurant(Avis avis, File photo) async {
     return "UNIMPLEMENTED";
   }
 
-  Future<int?> getCuisineId(String nomCuisine) async {
+  static Future<int?> getCuisineId(String nomCuisine) async {
     return (await supabase
         .from('style_cuisine')
         .select('style_id')
@@ -159,7 +154,7 @@ class DatabaseProvider {
         .single())['style_id'];
   }
 
-  Future<String?> addFavoriRestaurant(int restaurantId) async {
+  static Future<String?> addFavoriRestaurant(int restaurantId) async {
     String? err;
     await supabase.from('favoris_restaurant').insert({
       'uuid': getUser()?.id,
@@ -170,7 +165,7 @@ class DatabaseProvider {
     return err;
   }
 
-  Future<String?> addCuisineFavorite(String nomCuisine) async {
+  static Future<String?> addCuisineFavorite(String nomCuisine) async {
     int? styleId = await getCuisineId(nomCuisine);
     if (styleId == null) return "Style de cuisine non trouvé !";
     String? err;
