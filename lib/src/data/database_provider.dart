@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/models/restaurant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -142,6 +144,11 @@ class DatabaseProvider {
     }
 
     return avisList;
+  }
+
+// TODO
+  Future<String?> postAvisRestaurant(Avis avis, File photo) async {
+    return "UNIMPLEMENTED";
   }
 
   Future<int?> getCuisineId(String nomCuisine) async {
