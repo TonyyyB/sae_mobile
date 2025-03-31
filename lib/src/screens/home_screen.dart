@@ -23,12 +23,8 @@ class HomeScreen extends StatelessWidget {
           Expanded(
               child: ListView.builder(
                   itemCount: 5,
-                  prototypeItem: const Text("Salut"),
                   itemBuilder: (context, index) {
-                    return Container(
-                      height: 100,
-                      child: RestaurantCard(),
-                    );
+                    return RestaurantCard();
                   })),
         ],
       ),
