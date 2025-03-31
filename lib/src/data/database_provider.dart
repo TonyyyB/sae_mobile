@@ -149,10 +149,14 @@ class DatabaseProvider {
     return "UNIMPLEMENTED";
   }
 
-  static Future<double?> getRestaurantNote(Restaurant restaurant) async {
-    final res = await supabase.rpc('getnoterestaurant',
-        params: {'restaurant_osm_id': restaurant.osmId});
+  static Future<double?> getRestaurantNoteById(int osmId) async {
+    final res = await supabase
+        .rpc('getnoterestaurant', params: {'restaurant_osm_id': osmId});
     return res;
+  }
+
+  static Future<double?> getRestaurantNote(Restaurant restaurant) async {
+    return getRestaurantNoteById(restaurant.osmId);
   }
 
   static Future<int?> getCuisineId(String nomCuisine) async {
