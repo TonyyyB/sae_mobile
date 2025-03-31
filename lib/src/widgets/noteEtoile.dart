@@ -42,8 +42,8 @@ class SingleRatingIcon extends StatelessWidget {
 }
 
 class NoteEtoile extends StatelessWidget {
-  double size;
-  Color iconColor;
+  final double size;
+  final Color iconColor;
   final double rating;
 
   NoteEtoile(
