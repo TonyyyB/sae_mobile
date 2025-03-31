@@ -8,7 +8,30 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PickMenuScaffold(
-      child: RestaurantCard(),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text("Bienvenue, User !",
+                style: Theme.of(context).textTheme.headlineMedium),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text("Restaurants à la une:",
+                style: Theme.of(context).textTheme.titleMedium),
+          ),
+          Expanded(
+              child: ListView.builder(
+                  itemCount: 5,
+                  prototypeItem: const Text("Salut"),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 100,
+                      child: RestaurantCard(),
+                    );
+                  })),
+        ],
+      ),
     );
   }
 }
