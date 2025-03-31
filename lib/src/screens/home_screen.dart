@@ -7,7 +7,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PickMenuScaffold(
-      child: const Text("Coucou"),
+      child: const Text("Hey !"),
     );
   }
 }
