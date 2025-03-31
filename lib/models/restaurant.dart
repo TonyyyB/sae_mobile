@@ -61,6 +61,14 @@ class Restaurant {
     return this._openingHours;
   }
 
+  String get parseOpeningHours{
+    var res = "";
+    for (var horaire in _openingHours!){
+      res += '$horaire\n';
+    }
+    return res;
+  }
+
   String get getOsmId{
     return this._osmId;
   }
