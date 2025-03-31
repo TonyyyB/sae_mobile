@@ -113,4 +113,17 @@ class Restaurant {
   String toString() {
     return 'Restaurant{name: $_name, type: $_type, region: $_region, departement: $_departement, commune: $_commune, cuisine: $_cuisine, vegetarian: $_vegetarian, vegan: $_vegan, delivery: $_delivery, takeaway: $_takeaway, phone: $_phone, website: $_website, openingHours: $openingHours}';
   }
+
+  double get getGlobalRate {
+    var res = 0.0;
+    var diviser = 0;
+    if (_avis == null) {
+      return 0.0;
+    }
+    for (var avis in _avis!) {
+      res += avis.note;
+      diviser += 1;
+    }
+    return res / diviser;
+  }
 }

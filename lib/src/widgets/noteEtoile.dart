@@ -54,7 +54,7 @@ class NoteEtoile extends StatelessWidget {
       required this.rating});
   @override
   Widget build(BuildContext context) {
-    double cpt = rating;
+    var cpt = rating;
     Row res = Row(children: <Widget>[]);
     for (var i = 0; i < 5; i++) {
       if (cpt >= 1) {
