@@ -89,6 +89,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
           prenom: _prenomController.text,
           email: _emailController.text,
           password: _passwordController.text);
+      router.go("/");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Inscription réussie!')),
