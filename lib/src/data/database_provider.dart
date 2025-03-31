@@ -88,6 +88,9 @@ class DatabaseProvider {
         .select(
             "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style)")
         .eq('osm_id', osmId);
+    if (rawData.isEmpty) {
+      return null;
+    }
     final data = rawData[0];
     List<String> cuisines = [];
     for (var cuisine in data['style_cuisine']) {
@@ -144,6 +147,12 @@ class DatabaseProvider {
 // TODO
   static Future<String?> postAvisRestaurant(Avis avis, File photo) async {
     return "UNIMPLEMENTED";
+  }
+
+  static Future<double?> getRestaurantNote(Restaurant restaurant) async {
+    final res = await supabase.rpc('getnoterestaurant',
+        params: {'restaurant_osm_id': restaurant.osmId});
+    return res;
   }
 
   static Future<int?> getCuisineId(String nomCuisine) async {
