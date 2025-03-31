@@ -11,8 +11,6 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
   await Supabase.initialize(
       url: dotenv.env['DB_URL']!, anonKey: dotenv.env['DB_KEY']!);
-  await DatabaseProvider.signIn(
-      email: "tony.beaujouan2@gmail.com", password: "motdepasse");
   runApp(MyApp());
 }
 

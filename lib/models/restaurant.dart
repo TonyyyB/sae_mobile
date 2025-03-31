@@ -8,7 +8,7 @@ class Restaurant {
   final String _name;
   final String? _operator;
   final String? _brand;
-  final List<String>? _openingHours;
+  final List<String?>? _openingHours;
   final bool? _wheelchair;
   List<String>? _cuisine;
   final bool? _vegetarian;
@@ -33,7 +33,7 @@ class Restaurant {
       required String name,
       String? operator,
       String? brand,
-      List<String>? openingHours,
+      List<String?>? openingHours,
       bool? wheelchair,
       List<String>? cuisine,
       bool? vegetarian,
@@ -80,7 +80,7 @@ class Restaurant {
   String get name => _name;
   String? get operator => _operator;
   String? get brand => _brand;
-  List<String>? get openingHours => _openingHours;
+  List<String?>? get openingHours => _openingHours;
   bool? get wheelchair => _wheelchair;
   List<String>? get cuisine => _cuisine;
   bool? get vegetarian => _vegetarian;
@@ -112,6 +112,6 @@ class Restaurant {
 
   @override
   String toString() {
-    return 'Restaurant{name: $_name, type: $_type, region: $_region, departement: $_departement, commune: $_commune, cuisine: $_cuisine, vegetarian: $_vegetarian, vegan: $_vegan, delivery: $_delivery, takeaway: $_takeaway, phone: $_phone, website: $_website}';
+    return 'Restaurant{name: $_name, type: $_type, region: $_region, departement: $_departement, commune: $_commune, cuisine: $_cuisine, vegetarian: $_vegetarian, vegan: $_vegan, delivery: $_delivery, takeaway: $_takeaway, phone: $_phone, website: $_website, openingHours: $openingHours}';
   }
 }
