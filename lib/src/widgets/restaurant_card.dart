@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../config/colors.dart';
+import '../../models/restaurant.dart';
 
 class RestaurantCard extends StatelessWidget {
-  const RestaurantCard({super.key});
+  final Restaurant _restaurant;
+
+  const RestaurantCard({super.key, required Restaurant restau}):
+    this._restaurant = restau;
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +29,16 @@ class RestaurantCard extends StatelessWidget {
                 child: Padding(
                   padding : const EdgeInsets.fromLTRB(0, 0, 0, 20),
                   child : Row(
-                      children :[const Text('Nom du restau', style: TextStyle(color: PickMenuColors.textColor, fontSize: 24))
+                      children :[Text(_restaurant.getName, style: TextStyle(color: PickMenuColors.textColor, fontSize: 24))
                       ]
                   ),
                 ),
               ),
 
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    'Mo : 8h-12h 14h-18h\nMo : 8h-12h 14h-18h\nMo : 8h-12h 14h-18h\nMo : 8h-12h 14h-18h\nMo : 8h-12h 14h-18h\n',
+                    _restaurant.parseOpeningHours,
                     style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16),
                   ),
                 ),
