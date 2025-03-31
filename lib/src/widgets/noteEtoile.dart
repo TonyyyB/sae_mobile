@@ -37,14 +37,14 @@ class SingleRatingIcon extends StatelessWidget {
 
 class NoteEtoile extends StatelessWidget{
 
-  double size ;
-  Color iconColor ;
+  final double size ;
+  final Color iconColor ;
   final double rating;
 
   NoteEtoile({super.key,  this.size = 20, this.iconColor = PickMenuColors.iconsColor, required this.rating});
   @override
   Widget build(BuildContext context){
-    double cpt = rating;
+    var cpt = rating;
     Row res = Row(
         children: <Widget>[]
     );

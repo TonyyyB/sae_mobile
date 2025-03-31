@@ -144,4 +144,15 @@ class Restaurant {
   String get getCommune{
     return this._commune;
   }
+
+  double get getGlobalRate{
+    var res = 0.0;
+    var diviser = 0;
+    if (_avis == null){return 0.0;}
+    for (var avis in _avis!){
+      res += avis.getNote;
+      diviser += 1;
+    }
+    return res/diviser;
+  }
 }

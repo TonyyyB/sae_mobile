@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../../config/colors.dart';
 import '../../models/restaurant.dart';
 
@@ -29,7 +30,11 @@ class RestaurantCard extends StatelessWidget {
                 child: Padding(
                   padding : const EdgeInsets.fromLTRB(0, 0, 0, 20),
                   child : Row(
-                      children :[Text(_restaurant.getName, style: TextStyle(color: PickMenuColors.textColor, fontSize: 24))
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children :[Align(alignment: Alignment.centerLeft,
+                                  child: Text(_restaurant.getName, style: TextStyle(color: PickMenuColors.textColor, fontSize: 24))),
+                                 Align(alignment: Alignment.centerRight,
+                                  child: NoteEtoile(rating: _restaurant.getGlobalRate))
                       ]
                   ),
                 ),
