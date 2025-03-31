@@ -25,17 +25,37 @@ class DatabaseProvider {
 
   // 🔹 Méthode pour s'inscrire
   Future<String?> signUp(
-      {required String email, required String password}) async {
+      {required String nom,
+      required String prenom,
+      required String email,
+      required String password}) async {
     try {
       final response =
           await supabase.auth.signUp(email: email, password: password);
       if (response.user != null) {
-        return null; // Inscription réussie
+        await supabase.from("utilisateur").insert({
+          "uuid": response.user?.id,
+          "nom_utilisateur": nom,
+          "prenom_utilisateur": prenom
+        });
+        return null;
       }
       return "Erreur inconnue lors de l'inscription";
     } catch (e) {
       return e.toString();
     }
+  }
+
+  Future<(String?, String?)> getNomPrenom() async {
+    final response = await supabase
+        .from('utilisateur')
+        .select()
+        .eq('uuid', supabase.auth.currentUser!.id)
+        .single();
+    return (
+      response['nom_utilisateur'] as String,
+      response['prenom_utilisateur'] as String
+    );
   }
 
   // 🔹 Vérifie si l'utilisateur est connecté
