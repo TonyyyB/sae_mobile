@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/src/widgets/restaurant_card.dart';
 import 'package:sae_mobile/src/widgets/scaffold.dart';
-
+import '../../config/colors.dart';
+import '../widgets/noteEtoile.dart';
 import '../../models/restaurant.dart';
 
 class HomeScreen extends StatelessWidget {
