@@ -32,7 +32,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
       if (id == -1) throw Exception("ID de restaurant invalide");
 
       // Récupérer le restaurant
-      Restaurant? fetchedRestaurant = await DatabaseProvider.getRestaurantById(id);
+      Restaurant? fetchedRestaurant =
+          await DatabaseProvider.getRestaurantById(id);
       if (fetchedRestaurant == null) {
         setState(() {
           errorMessage = "Restaurant introuvable";
@@ -42,10 +43,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
       }
 
       // Récupérer les avis du restaurant
-      List<Avis> fetchedAvis = await DatabaseProvider.getAvisRestaurant(fetchedRestaurant);
+      List<Avis> fetchedAvis =
+          await DatabaseProvider.getAvisRestaurant(fetchedRestaurant);
 
       // Récupérer la note globale
-      double? fetchedNote = await DatabaseProvider.getRestaurantNote(fetchedRestaurant);
+      double? fetchedNote =
+          await DatabaseProvider.getRestaurantNote(fetchedRestaurant);
 
       setState(() {
         restaurant = fetchedRestaurant;
@@ -70,15 +73,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     return Row(
       children: [
-        ...List.generate(
-            fullStars,
-                (index) => Icon(Icons.star, color: Colors.amber, size: size)
-        ),
+        ...List.generate(fullStars,
+            (index) => Icon(Icons.star, color: Colors.amber, size: size)),
         if (hasHalfStar) Icon(Icons.star_half, color: Colors.amber, size: size),
         ...List.generate(
             emptyStars,
-                (index) => Icon(Icons.star_border, color: Colors.amber, size: size)
-        ),
+            (index) =>
+                Icon(Icons.star_border, color: Colors.amber, size: size)),
       ],
     );
   }
@@ -97,10 +98,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 8),
-        ...openingHours.map((horaire) => Padding(
-          padding: const EdgeInsets.only(left: 16, bottom: 4),
-          child: Text(horaire),
-        )).toList(),
+        ...openingHours
+            .map((horaire) => Padding(
+                  padding: const EdgeInsets.only(left: 16, bottom: 4),
+                  child: Text(horaire),
+                ))
+            .toList(),
       ],
     );
   }
@@ -144,10 +147,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 8),
-        ...options.map((option) => Padding(
-          padding: const EdgeInsets.only(left: 16, bottom: 4),
-          child: option,
-        )).toList(),
+        ...options
+            .map((option) => Padding(
+                  padding: const EdgeInsets.only(left: 16, bottom: 4),
+                  child: option,
+                ))
+            .toList(),
       ],
     );
   }
@@ -161,12 +166,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     if (restaurant?.getWebsite != null) {
       contactInfo.add(Text(restaurant!.getWebsite!,
-          style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)));
+          style: const TextStyle(
+              color: Colors.blue, decoration: TextDecoration.underline)));
     }
 
     if (restaurant?.getFacebook != null) {
       contactInfo.add(Text(restaurant!.getFacebook!,
-          style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)));
+          style: const TextStyle(
+              color: Colors.blue, decoration: TextDecoration.underline)));
     }
 
     if (contactInfo.isEmpty) {
@@ -181,10 +188,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 8),
-        ...contactInfo.map((info) => Padding(
-          padding: const EdgeInsets.only(left: 16, bottom: 4),
-          child: info,
-        )).toList(),
+        ...contactInfo
+            .map((info) => Padding(
+                  padding: const EdgeInsets.only(left: 16, bottom: 4),
+                  child: info,
+                ))
+            .toList(),
       ],
     );
   }
@@ -206,7 +215,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min, // Important pour éviter que la colonne prenne tout l'espace
+      mainAxisSize: MainAxisSize
+          .min, // Important pour éviter que la colonne prenne tout l'espace
       children: [
         const Text(
           "Avis :",
@@ -232,9 +242,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     _buildStarRating(avis.note.toDouble(), size: 16),
                   ],
                 ),
-                subtitle: avis.commentaire != null
-                    ? Text(avis.commentaire!)
-                    : null,
+                subtitle:
+                    avis.commentaire != null ? Text(avis.commentaire!) : null,
               );
             },
           ),
@@ -312,15 +321,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text("Chargement..."), backgroundColor: Colors.green),
+        appBar: AppBar(
+            title: const Text("Chargement..."), backgroundColor: Colors.green),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (errorMessage != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text("Erreur"), backgroundColor: Colors.red),
-        body: Center(child: Text(errorMessage!, style: const TextStyle(color: Colors.red))),
+        appBar:
+            AppBar(title: const Text("Erreur"), backgroundColor: Colors.red),
+        body: Center(
+            child:
+                Text(errorMessage!, style: const TextStyle(color: Colors.red))),
       );
     }
 
@@ -334,8 +347,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             onPressed: () async {
               await DatabaseProvider.addFavoriRestaurant(restaurant!.getOsmId);
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Ajouté aux favoris"))
-              );
+                  const SnackBar(content: Text("Ajouté aux favoris")));
             },
           ),
         ],
