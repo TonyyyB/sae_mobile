@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:sae_mobile/src/data/database_provider.dart';
 import 'package:sae_mobile/src/screens/avis_screen.dart';
 import 'package:sae_mobile/src/screens/connexion_screen.dart';
 import 'package:sae_mobile/src/screens/detail_screen.dart';
@@ -7,7 +8,7 @@ import 'package:sae_mobile/src/screens/inscription_screen.dart';
 
 final GoRouter router = GoRouter(
     redirect: (context, state) {
-      final loggedIn = false;
+      final loggedIn = DatabaseProvider().isAuthenticated();
       final goingToLogin = state.uri.toString() == '/';
       final goingToSignUp = state.uri.toString() == '/inscription';
 
