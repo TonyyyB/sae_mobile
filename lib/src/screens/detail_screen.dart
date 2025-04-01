@@ -85,7 +85,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   Widget _buildHorairesSection() {
-    List<String>? openingHours = restaurant?.getOpeningHours;
+    List<String?>? openingHours = restaurant?.openingHours;
     if (openingHours == null || openingHours.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -101,7 +101,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ...openingHours
             .map((horaire) => Padding(
                   padding: const EdgeInsets.only(left: 16, bottom: 4),
-                  child: Text(horaire),
+                  child: Text(horaire ?? "Fermé"),
                 ))
             .toList(),
       ],
@@ -111,27 +111,27 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Widget _buildOptionsSection() {
     List<Widget> options = [];
 
-    if (restaurant?.getVegetarian == true) {
+    if (restaurant?.vegetarian == true) {
       options.add(const Text("• Végétarien"));
     }
 
-    if (restaurant?.getVegan == true) {
+    if (restaurant?.vegan == true) {
       options.add(const Text("• Végan"));
     }
 
-    if (restaurant?.getWheelchair == true) {
+    if (restaurant?.wheelchair == true) {
       options.add(const Text("• Accès fauteuil roulant"));
     }
 
-    if (restaurant?.getDelivery == true) {
+    if (restaurant?.delivery == true) {
       options.add(const Text("• Livraison"));
     }
 
-    if (restaurant?.getTakeaway == true) {
+    if (restaurant?.takeaway == true) {
       options.add(const Text("• À emporter"));
     }
 
-    if (restaurant?.getDriveThrough == true) {
+    if (restaurant?.driveThrough == true) {
       options.add(const Text("• Service au volant"));
     }
 
@@ -160,18 +160,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Widget _buildContactSection() {
     List<Widget> contactInfo = [];
 
-    if (restaurant?.getphone != null) {
-      contactInfo.add(Text(restaurant!.getphone!));
+    if (restaurant?.phone != null) {
+      contactInfo.add(Text(restaurant!.phone!));
     }
 
-    if (restaurant?.getWebsite != null) {
-      contactInfo.add(Text(restaurant!.getWebsite!,
+    if (restaurant?.website != null) {
+      contactInfo.add(Text(restaurant!.website!,
           style: const TextStyle(
               color: Colors.blue, decoration: TextDecoration.underline)));
     }
 
-    if (restaurant?.getFacebook != null) {
-      contactInfo.add(Text(restaurant!.getFacebook!,
+    if (restaurant?.facebook != null) {
+      contactInfo.add(Text(restaurant!.facebook!,
           style: const TextStyle(
               color: Colors.blue, decoration: TextDecoration.underline)));
     }
@@ -261,7 +261,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   Widget _buildCuisineSection() {
-    List<String>? cuisines = restaurant?.getCuisine;
+    List<String>? cuisines = restaurant?.cuisine;
     if (cuisines == null || cuisines.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -339,13 +339,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(restaurant!.getName),
+        title: Text(restaurant!.name),
         backgroundColor: Colors.green,
         actions: [
           IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: () async {
-              await DatabaseProvider.addFavoriRestaurant(restaurant!.getOsmId);
+              await DatabaseProvider.addFavoriRestaurant(restaurant!.osmId);
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Ajouté aux favoris")));
             },
@@ -361,7 +361,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  restaurant!.getName,
+                  restaurant!.name,
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -371,7 +371,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            Text(restaurant!.getType),
+            Text(restaurant!.type),
             const SizedBox(height: 16),
             _buildCuisineSection(),
             const SizedBox(height: 16),
