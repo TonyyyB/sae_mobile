@@ -12,10 +12,13 @@ class RestaurantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var typeCuisine = _restaurant.parseCuisine;
+    typeCuisine ??= "Type de cuisine non spécifié";
+    var horaires = _restaurant.parseOpeningHours;
     return Card(
             elevation: 10,
             clipBehavior: Clip.antiAlias,
-            margin : EdgeInsets.all(50.0),
+            margin : EdgeInsets.fromLTRB(50, 40, 50, 10),
             child: GestureDetector(
             onTap : (){ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Click')));},
@@ -42,10 +45,15 @@ class RestaurantCard extends StatelessWidget {
 
                 Padding(
                   padding: EdgeInsets.all(16),
-                  child: Text(
-                    _restaurant.parseOpeningHours,
-                    style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16),
-                  ),
+                  child: Column(
+                    children : [
+                      Align(alignment: Alignment.topLeft,
+                                  child: Padding(padding: EdgeInsets.fromLTRB(16, 5, 16, 16), child :Text(_restaurant.getType, style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
+                      Align(alignment: Alignment.topLeft,
+                                  child:Padding(padding: EdgeInsets.all(16), child :Text('Type de cuisine : \n      $typeCuisine', style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
+                      Align(alignment: Alignment.topLeft,
+                                  child:Padding(padding: EdgeInsets.all(16), child :Text("Horaires d'ouverture : \n$horaires", style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
+                    ])
                 ),
               ],
             ),
