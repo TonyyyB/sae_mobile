@@ -74,7 +74,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(restaurant!.name),
+        title: Text(restaurant!.getName),
         backgroundColor: Colors.green,
       ),
       body: Padding(
@@ -82,19 +82,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(restaurant!.name, style: PickMenuTheme.defaultTheme().textTheme.headlineLarge),
+            Text(restaurant!.getName, style: PickMenuTheme.defaultTheme().textTheme.headlineLarge),
             SizedBox(height: 10),
-            Text("Type: ${restaurant!.type}"),
-            Text("Région: ${restaurant!.region}, Département: ${restaurant!.departement}, Commune: ${restaurant!.commune}"),
-            if (restaurant!.phone != null) Text("Téléphone: ${restaurant!.phone}"),
-            if (restaurant!.website != null)
-              Text("Site Web: ${restaurant!.website}", style: TextStyle(color: Colors.blue)),
+            Text("Type: ${restaurant!.getType}"),
+            Text("Région: ${restaurant!.getRegion}, Département: ${restaurant!.getDepartement}, Commune: ${restaurant!.getCommune}"),
+            if (restaurant!.getphone != null) Text("Téléphone: ${restaurant!.getphone}"),
+            if (restaurant!.getWebsite != null)
+              Text("Site Web: ${restaurant!.getWebsite}", style: TextStyle(color: Colors.blue)),
             SizedBox(height: 20),
             Text("Options:", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text((restaurant!.vegetarian ?? false) ? "✔ Végétarien" : "✖ Végétarien"),
-            Text((restaurant!.vegan ?? false) ? "✔ Végan" : "✖ Végan"),
-            Text((restaurant!.delivery ?? false) ? "✔ Livraison" : "✖ Livraison"),
-            Text((restaurant!.takeaway ?? false) ? "✔ À emporter" : "✖ À emporter"),
+            Text((restaurant!.getVegetarian ?? false) ? "✔ Végétarien" : "✖ Végétarien"),
+            Text((restaurant!.getVegan ?? false) ? "✔ Végan" : "✖ Végan"),
+            Text((restaurant!.getDelivery ?? false) ? "✔ Livraison" : "✖ Livraison"),
+            Text((restaurant!.getTakeaway ?? false) ? "✔ À emporter" : "✖ À emporter"),
             SizedBox(height: 20),
             Text("Avis:", style: TextStyle(fontWeight: FontWeight.bold)),
             Expanded(

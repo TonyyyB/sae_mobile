@@ -25,7 +25,7 @@ class Restaurant {
   final String _commune;
   List<Avis>? _avis;
 
-  Restaurant({required String osmId,required double longitude,required double latitude,required
+  Restaurant({required int osmId,required double longitude,required double latitude,required
   String type,required String name , String? operator, String? brand, List<String>? openingHours, bool? wheelchair,
   List<String>? cuisine, bool? vegetarian, bool? vegan, bool? delivery, bool? takeaway, String? capacity,
   bool? driveThrough, String? phone, String? website, String? facebook, required String region, required String departement,
@@ -68,7 +68,7 @@ class Restaurant {
     return res;
   }
 
-  String get getOsmId{
+  int get getOsmId{
     return this._osmId;
   }
 
@@ -150,7 +150,7 @@ class Restaurant {
     var diviser = 0;
     if (_avis == null){return 0.0;}
     for (var avis in _avis!){
-      res += avis.getNote;
+      res += avis.note;
       diviser += 1;
     }
     return res/diviser;
