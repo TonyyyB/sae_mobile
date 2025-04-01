@@ -37,8 +37,8 @@ class SingleRatingIcon extends StatelessWidget {
 
 class NoteEtoile extends StatelessWidget{
 
-  double size ;
-  Color iconColor ;
+  final double size ;
+  final Color iconColor ;
   final double rating;
 
   NoteEtoile({super.key,  this.size = 20, this.iconColor = PickMenuColors.iconsColor, required this.rating});
@@ -64,5 +64,7 @@ class NoteEtoile extends StatelessWidget{
     return res;
   }
 }
+
+
 
 
