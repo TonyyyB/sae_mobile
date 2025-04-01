@@ -126,4 +126,15 @@ class Restaurant {
     }
     return res / diviser;
   }
+
+  String? get parseCuisine {
+    if (_cuisine == null) {
+      return null;
+    }
+    var res = "";
+    for (var cook in _cuisine!) {
+      res += '$cook, ';
+    }
+    return res;
+  }
 }
