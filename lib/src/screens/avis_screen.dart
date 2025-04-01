@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/src/widgets/avis.dart';
+import 'package:sae_mobile/src/widgets/avis_restaurant.dart';
+import 'package:sae_mobile/src/widgets/scaffold.dart';
 
 class AvisScreen extends StatelessWidget {
   final String id;
@@ -6,6 +9,6 @@ class AvisScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text("Avis");
+    return PickMenuScaffold(child: AvisRestaurant());
   }
 }
