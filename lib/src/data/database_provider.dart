@@ -126,7 +126,7 @@ class DatabaseProvider {
     final data = await supabase
         .from('commentaire')
         .select()
-        .eq('osm_id', restaurant.osmId);
+        .eq('osm_id', restaurant.getOsmId);
 
     List<Avis> avisList = [];
 
@@ -156,7 +156,7 @@ class DatabaseProvider {
   }
 
   static Future<double?> getRestaurantNote(Restaurant restaurant) async {
-    return getRestaurantNoteById(restaurant.osmId);
+    return getRestaurantNoteById(restaurant.getOsmId);
   }
 
   static Future<int?> getCuisineId(String nomCuisine) async {

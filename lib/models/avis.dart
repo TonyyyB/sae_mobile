@@ -43,7 +43,7 @@ class Avis {
   Map<String, dynamic> insert() {
     return {
       'uuid': _uuid,
-      'osm_id': _restaurant.osmId,
+      'osm_id': _restaurant.getOsmId,
       'note': _note,
       'commentaire': _commentaire,
       'photo': _photo
@@ -52,6 +52,6 @@ class Avis {
 
   @override
   String toString() {
-    return 'Avis{id: $_id, uuid: $_uuid, restaurant: ${_restaurant.name}, note: $_note, commentaire: $_commentaire, photo: $_photo}';
+    return 'Avis{id: $_id, uuid: $_uuid, restaurant: ${_restaurant.getName}, note: $_note, commentaire: $_commentaire, photo: $_photo}';
   }
 }
