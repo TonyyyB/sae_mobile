@@ -1,110 +1,193 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'dart:io';
+
+import 'package:sae_mobile/models/avis.dart';
+import 'package:sae_mobile/models/restaurant.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseProvider {
-  static final DatabaseProvider instance = DatabaseProvider._init();
-  static Database? _database;
+  static final SupabaseClient supabase = Supabase.instance.client;
 
-  DatabaseProvider._init();
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await createDatabase();
-    return _database!;
+  static Future<String?> signIn(
+      {required String email, required String password}) async {
+    try {
+      final response = await supabase.auth
+          .signInWithPassword(email: email, password: password);
+      if (response.user != null) {
+        return null;
+      }
+      return "Erreur inconnue lors de la connexion";
+    } catch (e) {
+      return e.toString();
+    }
   }
 
-  Future<Database> createDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'my_database.db');
+  static Future<String?> signUp(
+      {required String email, required String password}) async {
+    try {
+      final response =
+          await supabase.auth.signUp(email: email, password: password);
+      if (response.user != null) {
+        return null;
+      }
+      return "Erreur inconnue lors de l'inscription";
+    } catch (e) {
+      return e.toString();
+    }
+  }
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
+  static bool isAuthenticated() => supabase.auth.currentSession != null;
+
+  static User? getUser() {
+    return supabase.auth.currentUser;
+  }
+
+  static Future<void> signOut() async {
+    await supabase.auth.signOut();
+  }
+
+  static Future<List<Restaurant>> getAllRestaurants() async {
+    final data = await supabase.from('restaurant').select(
+        "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style)");
+    List<Restaurant> restaurants = [];
+    for (var res in data) {
+      List<String> cuisines = [];
+      for (var cuisine in res['style_cuisine']) {
+        cuisines.add(cuisine['nom_style']);
+      }
+      Restaurant restaurant = Restaurant(
+        osmId: res['osm_id'],
+        longitude: res['longitude'],
+        latitude: res['latitude'],
+        type: res['type_restaurant']['nom_type'],
+        cuisine: cuisines,
+        name: res['nom_res'],
+        operator: res['operator'],
+        brand: res['brand'],
+        wheelchair: res['wheelchair'],
+        vegetarian: res['vegetarien'],
+        vegan: res['vegan'],
+        delivery: res['delivery'],
+        takeaway: res['takeaway'],
+        capacity: res['capacity'],
+        driveThrough: res['drive_through'],
+        phone: res['phone'],
+        website: res['website'],
+        facebook: res['facebook'],
+        region: res['region'],
+        departement: res['departement'],
+        commune: res['commune'],
+      );
+      restaurants.add(restaurant);
+    }
+    return restaurants;
+  }
+
+  static Future<Restaurant?> getRestaurantById(int osmId) async {
+    final rawData = await supabase
+        .from('restaurant')
+        .select(
+            "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style)")
+        .eq('osm_id', osmId);
+    if (rawData.isEmpty) {
+      return null;
+    }
+    final data = rawData[0];
+    List<String> cuisines = [];
+    for (var cuisine in data['style_cuisine']) {
+      cuisines.add(cuisine['nom_style']);
+    }
+    Restaurant restaurant = Restaurant(
+      osmId: data['osm_id'],
+      longitude: data['longitude'],
+      latitude: data['latitude'],
+      type: data['type_restaurant']['nom_type'],
+      cuisine: cuisines,
+      name: data['nom_res'],
+      operator: data['operator'],
+      brand: data['brand'],
+      wheelchair: data['wheelchair'],
+      vegetarian: data['vegetarien'],
+      vegan: data['vegan'],
+      delivery: data['delivery'],
+      takeaway: data['takeaway'],
+      capacity: data['capacity'],
+      driveThrough: data['drive_through'],
+      phone: data['phone'],
+      website: data['website'],
+      facebook: data['facebook'],
+      region: data['region'],
+      departement: data['departement'],
+      commune: data['commune'],
     );
+    return restaurant;
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        mdp TEXT NOT NULL
-      )
-    ''');
+  static Future<List<Avis>> getAvisRestaurant(Restaurant restaurant) async {
+    final data = await supabase
+        .from('commentaire')
+        .select()
+        .eq('osm_id', restaurant.osmId);
 
-    await db.execute('''
-      CREATE TABLE restaurant (
-        osm_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        longitude INTEGER NOT NULL,
-        latitude INTEGER NOT NULL,
-        name TEXT NOT NULL,
-        type TEXT NOT NULL,
-        operator TEXT,
-        brand TEXT,
-        wheelchair BOOLEAN,
-        vegetarian BOOLEAN,
-        vegan BOOLEAN;
-        delivery BOOLEAN,
-        takeaway BOOLEAN,
-        capacity TEXT,
-        drive_through BOOLEAN,
-        phone TEXT,
-        website TEXT,
-        facebook TEXT,
-        region TEXT NOT NULL,
-        department TEXT NOT NULL,
-        commune TEXT NOT NULL
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE favori (
-        user_id INTEGER,
-        osm_id INTEGER,
-        PRIMARY KEY(user_id, osm_id),
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-        FOREIGN KEY (osm_id) REFERENCES restaurant (osm_id) ON DELETE CASCADE
-      )
-    ''');
+    List<Avis> avisList = [];
 
-    await db.execute('''
-      CREATE TABLE cuisine (
-        cuisine_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom TEXT
-      )
-    ''');
+    for (Map<String, dynamic> avisData in data) {
+      Avis avis = Avis(
+          id: avisData['com_id'],
+          uuid: avisData['uuid'],
+          restaurant: restaurant,
+          note: avisData['note'],
+          commentaire: avisData['commentaire'],
+          photo: avisData['photo']);
+      avisList.add(avis);
+    }
 
-    await db.execute('''
-      CREATE TABLE possede (
-        cuisine_id INTEGER,
-        osm_id INTEGER,
-        PRIMARY KEY(cuisine_id, osm_id),
-        FOREIGN KEY (cuisine_id) REFERENCES cuisine (cuisine_id) ON DELETE CASCADE,
-        FOREIGN KEY (osm_id) REFERENCES restaurant (osm_id) ON DELETE CASCADE
-      )
-    ''');
+    return avisList;
+  }
 
-    await db.execute('''
-      CREATE TABLE avis (
-        id_avis INTEGER,
-        osm_Id INTEGER,
-        user_id INTEGER,
-        note INTEGER NOT NULL,
-        content TEXT NOT NULL,
-        PRIMARY KEY(id_avis,osm_Id,user_id),
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-        FOREIGN KEY (osm_id) REFERENCES restaurant (osm_id) ON DELETE CASCADE
-      )
-    ''');
+// TODO
+  static Future<String?> postAvisRestaurant(Avis avis, File photo) async {
+    return "UNIMPLEMENTED";
+  }
 
-    await db.execute('''
-      CREATE TABLE photo (
-        id_avis INTEGER,
-        path TEXT NOT NULL,
-        PRIMARY KEY(id_avis,path),
-        FOREIGN KEY (id_avis) REFERENCES avis (id_avis) ON DELETE CASCADE
-      )
-    ''');
+  static Future<double?> getRestaurantNoteById(int osmId) async {
+    final res = await supabase
+        .rpc('getnoterestaurant', params: {'restaurant_osm_id': osmId});
+    return res;
+  }
+
+  static Future<double?> getRestaurantNote(Restaurant restaurant) async {
+    return getRestaurantNoteById(restaurant.osmId);
+  }
+
+  static Future<int?> getCuisineId(String nomCuisine) async {
+    return (await supabase
+        .from('style_cuisine')
+        .select('style_id')
+        .eq('nom_style', nomCuisine)
+        .single())['style_id'];
+  }
+
+  static Future<String?> addFavoriRestaurant(int restaurantId) async {
+    String? err;
+    await supabase.from('favoris_restaurant').insert({
+      'uuid': getUser()?.id,
+      'osm_id': restaurantId,
+    }).onError((error, stackTrace) {
+      err = error.toString();
+    });
+    return err;
+  }
+
+  static Future<String?> addCuisineFavorite(String nomCuisine) async {
+    int? styleId = await getCuisineId(nomCuisine);
+    if (styleId == null) return "Style de cuisine non trouvé !";
+    String? err;
+    await supabase.from('favoris_style').insert({
+      'uuid': getUser()?.id,
+      'style_id': styleId,
+    }).onError((error, stackTrace) {
+      err = error.toString();
+    });
+    return err;
   }
 }

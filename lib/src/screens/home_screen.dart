@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return RestaurantCard(restau: restau);
                   })),
+
     );
   }
 }

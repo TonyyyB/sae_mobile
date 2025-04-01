@@ -1,29 +1,28 @@
 import 'avis.dart';
 
 class Restaurant {
-  static Map<String, int> typesCuisine = {};
-  String _osmId;
-  double _longitude;
-  double _latitude;
-  String _type;
-  String _name;
-  String? _operator;
-  String? _brand;
-  List<String>? _openingHours;
-  bool? _wheelchair;
+  final int _osmId;
+  final double _longitude;
+  final double _latitude;
+  final String _type;
+  final String _name;
+  final String? _operator;
+  final String? _brand;
+  final List<String>? _openingHours;
+  final bool? _wheelchair;
   List<String>? _cuisine;
-  bool? _vegetarian;
-  bool? _vegan;
-  bool? _delivery;
-  bool? _takeaway;
-  String? _capacity;
-  bool? _driveThrough;
-  String? _phone;
-  String? _website;
-  String? _facebook;
-  String _region;
-  String _departement;
-  String _commune;
+  final bool? _vegetarian;
+  final bool? _vegan;
+  final bool? _delivery;
+  final bool? _takeaway;
+  final String? _capacity;
+  final bool? _driveThrough;
+  final String? _phone;
+  final String? _website;
+  final String? _facebook;
+  final String _region;
+  final String _departement;
+  final String _commune;
   List<Avis>? _avis;
 
   Restaurant({required String osmId,required double longitude,required double latitude,required
@@ -143,6 +142,7 @@ class Restaurant {
 
   String get getCommune{
     return this._commune;
+
   }
 
   double get getGlobalRate{
