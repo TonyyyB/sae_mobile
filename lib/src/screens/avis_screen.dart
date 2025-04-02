@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sae_mobile/src/widgets/avis.dart';
 import 'package:sae_mobile/src/widgets/avis_restaurant.dart';
 import 'package:sae_mobile/src/widgets/scaffold.dart';
 
