@@ -15,6 +15,7 @@ class RestaurantCard extends StatelessWidget {
     var typeCuisine = _restaurant.parseCuisine;
     typeCuisine ??= "Type de cuisine non spécifié";
     var horaires = _restaurant.parseOpeningHours;
+    horaires ??= "      Horaires indisponibles";
     return Card(
             elevation: 10,
             clipBehavior: Clip.antiAlias,
