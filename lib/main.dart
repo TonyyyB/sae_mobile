@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/config/theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:sae_mobile/models/restaurant.dart';
-import 'package:sae_mobile/src/data/database_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'config/router.dart';
 
