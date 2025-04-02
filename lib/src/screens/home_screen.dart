@@ -27,9 +27,11 @@ class HomeScreen extends StatelessWidget {
         departement: "Loiret",
         commune: "Orléans");
     return PickMenuScaffold(
-      child: Expanded(
+      child: SingleChildScrollView(
           child: ListView.builder(
               itemCount: 5,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return RestaurantCard(restau: restau);
               })),
