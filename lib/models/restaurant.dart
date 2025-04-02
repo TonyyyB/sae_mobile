@@ -61,6 +61,9 @@ class Restaurant {
   }
 
   String get parseOpeningHours{
+    if(_openingHours == null){
+      return "";
+    }
     var res = "";
     for (var horaire in _openingHours!){
       res += '      $horaire\n';

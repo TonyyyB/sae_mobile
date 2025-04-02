@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/src/data/database_provider.dart';
 import 'package:sae_mobile/src/widgets/restaurant_card.dart';
 import 'package:sae_mobile/src/widgets/scaffold.dart';
 import '../../config/colors.dart';
@@ -10,15 +13,35 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var restau = new Restaurant(osmId: 1, longitude: 1.9052942, latitude: 47.90114979996115, type: "fast_food", name: "Cha+", openingHours: ["Mo: 8h-18h30", "Tu: 8h-18h30", "We: 8h-18h30", "Th: 8h-18h30", "Fr: 8h-18h30", "Sa: 8h-18h30", "Su: 8h-18h30"], region: "Centre-Val de Loire", departement: "Loiret", commune: "Orléans");
-    return PickMenuScaffold(
-      child: Expanded(
-              child: ListView.builder(
-                  itemCount: 5,
+    return FutureBuilder<List<Restaurant>>(
+      future: DatabaseProvider.getAllRestaurants(),
+      builder: (context, snapshot) {
+        switch(snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Text('Loading...');
+          default:
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            List<Restaurant> data = snapshot.data!;
+            var restaus = [];
+            for (var i = 0; i <= 4; i++) {
+              var intValue = Random().nextInt(25);
+              restaus.add(data[intValue]);
+            }
+            print([for(var i in restaus) i]);
+            return PickMenuScaffold(
+              child: Expanded(
+                child: ListView.builder(
+                  itemCount: restaus.length,
                   itemBuilder: (context, index) {
-                    return RestaurantCard(restau: restau);
-                  })),
-
+                    return RestaurantCard(restau: restaus[index]);
+                  },
+                ),
+              )
+            );
+        }
+      },
     );
   }
 }
