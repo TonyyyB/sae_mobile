@@ -101,11 +101,12 @@ class DatabaseProvider {
     return restaurants;
   }
 
-  static Future<Restaurant?> getRestaurantById(int osmId) async {
+  static Future<Restaurant?> getRestaurantById(int osmId,
+      {bool loadAvis = false}) async {
     final rawData = await supabase
         .from('restaurant')
         .select(
-            "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style), horaires(osm_id,lundi,mardi,mercredi,jeudi,vendredi,samedi,dimanche)")
+        "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style)")
         .eq('osm_id', osmId);
     if (rawData.isEmpty) {
       return null;
@@ -114,21 +115,6 @@ class DatabaseProvider {
     List<String> cuisines = [];
     for (var cuisine in data['style_cuisine']) {
       cuisines.add(cuisine['nom_style']);
-    }
-    List<String?>? horaires;
-    if (data['horaires'] != null) {
-      horaires = [];
-      for (var day in [
-        'Lundi',
-        'Mardi',
-        'Mercredi',
-        'Jeudi',
-        'Vendredi',
-        'Samedi',
-        'Dimanche'
-      ]) {
-        horaires.add("$day: ${data['horaires'][day.toLowerCase()] ?? "Fermé"}");
-      }
     }
     Restaurant restaurant = Restaurant(
       osmId: data['osm_id'],
@@ -153,6 +139,13 @@ class DatabaseProvider {
       departement: data['departement'],
       commune: data['commune'],
     );
+
+    if (loadAvis) {
+      final List<Avis> avis = await getAvisRestaurant(restaurant);
+      if (avis.isNotEmpty) {
+        restaurant.avis = avis;
+      }
+    }
     return restaurant;
   }
 
@@ -171,7 +164,7 @@ class DatabaseProvider {
     final data = await supabase
         .from('commentaire')
         .select()
-        .eq('osm_id', restaurant.getOsmId);
+        .eq('osm_id', restaurant.osmId);
 
     List<Avis> avisList = [];
 
@@ -201,7 +194,7 @@ class DatabaseProvider {
   }
 
   static Future<double?> getRestaurantNote(Restaurant restaurant) async {
-    return getRestaurantNoteById(restaurant.getOsmId);
+    return getRestaurantNoteById(restaurant.osmId);
   }
 
   static Future<int?> getCuisineId(String nomCuisine) async {

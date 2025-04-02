@@ -22,7 +22,7 @@ final GoRouter router = GoRouter(routes: [
     path: '/detail/:id',
     builder: (context, state) {
       final restaurantId = state.pathParameters['id'];
-      return DetailsScreen(restaurantId: restaurantId!);
+      return DetailsScreen(restaurantId: int.parse(restaurantId!));
     },
     routes: [
       GoRoute(

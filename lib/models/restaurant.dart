@@ -105,9 +105,6 @@ class Restaurant {
     _avis!.add(avis);
   }
 
-  List<Avis>? get getAvis {
-    return this._avis;
-  }
 
   @override
   String toString() {
