@@ -41,7 +41,7 @@ final GoRouter router = GoRouter(
             path: 'avis',
             builder: (context, state) {
               final restaurantId = state.pathParameters['id'];
-              return AvisScreen(id: restaurantId!);
+              return AvisScreen(id: int.parse(restaurantId!));
             },
           ),
         ],

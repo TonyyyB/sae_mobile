@@ -84,7 +84,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
     }
 
     if (isValid) {
-      DatabaseProvider().signUp(
+      DatabaseProvider.signUp(
           nom: _nomController.text,
           prenom: _prenomController.text,
           email: _emailController.text,

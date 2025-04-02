@@ -21,7 +21,7 @@ class DatabaseProvider {
     }
   }
 
-  Future<String?> signUp(
+  static Future<String?> signUp(
       {required String nom,
       required String prenom,
       required String email,
@@ -43,16 +43,26 @@ class DatabaseProvider {
     }
   }
 
-  Future<(String?, String?)> getNomPrenom() async {
-    final response = await supabase
-        .from('utilisateur')
-        .select()
-        .eq('uuid', supabase.auth.currentUser!.id)
-        .single();
-    return (
-      response['nom_utilisateur'] as String,
-      response['prenom_utilisateur'] as String
-    );
+  static Future<(String, String)?> getNomPrenom(String uuid) async {
+    final response =
+        await supabase.from('utilisateur').select().eq('uuid', uuid).limit(1);
+
+    if (response.isEmpty) {
+      return null;
+    }
+
+    final res = response[0];
+
+    return res['nom_utilisateur'] == null || res['prenom_utilisateur'] == null
+        ? null
+        : (
+            res['nom_utilisateur'] as String,
+            res['prenom_utilisateur'] as String
+          );
+  }
+
+  static Future<(String, String)?> getSelfNomPrenom() async {
+    return getNomPrenom(supabase.auth.currentUser!.id);
   }
 
   static bool isAuthenticated() => supabase.auth.currentSession != null;
@@ -102,7 +112,8 @@ class DatabaseProvider {
     return restaurants;
   }
 
-  static Future<Restaurant?> getRestaurantById(int osmId) async {
+  static Future<Restaurant?> getRestaurantById(int osmId,
+      {bool loadAvis = false}) async {
     final rawData = await supabase
         .from('restaurant')
         .select(
@@ -139,6 +150,13 @@ class DatabaseProvider {
       departement: data['departement'],
       commune: data['commune'],
     );
+
+    if (loadAvis) {
+      final List<Avis> avis = await getAvisRestaurant(restaurant);
+      if (avis.isNotEmpty) {
+        restaurant.avis = avis;
+      }
+    }
     return restaurant;
   }
 
@@ -164,9 +182,16 @@ class DatabaseProvider {
     return avisList;
   }
 
-// TODO
-  static Future<String?> postAvisRestaurant(Avis avis, File photo) async {
-    return "UNIMPLEMENTED";
+// TODO la photo ne fonctionne pas
+  static Future<String?> postAvisRestaurant(Avis avis, File? photo) async {
+    String? err;
+    await supabase
+        .from('commentaire')
+        .insert(avis.insert())
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+    return err;
   }
 
   static Future<double?> getRestaurantNoteById(int osmId) async {
