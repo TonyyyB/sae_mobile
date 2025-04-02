@@ -139,6 +139,7 @@ class _ConnexionScreenState extends State<ConnexionScreen> {
                         children: [
                           TextField(
                             controller: _emailController,
+                            textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               hintText: "Email",
                               border: OutlineInputBorder(),
@@ -154,6 +155,18 @@ class _ConnexionScreenState extends State<ConnexionScreen> {
                             children: [
                               TextField(
                                 controller: _passwordController,
+                                textInputAction: TextInputAction.go,
+                                onSubmitted: _isSubmitting
+                                    ? null
+                                    : (value) {
+                                        try {
+                                          TextInput.finishAutofillContext(
+                                              shouldSave: true);
+                                        } catch (e) {
+                                          print("Erreur autofill: $e");
+                                        }
+                                        _signIn();
+                                      },
                                 decoration: InputDecoration(
                                   hintText: "Mot de passe",
                                   border: OutlineInputBorder(),
