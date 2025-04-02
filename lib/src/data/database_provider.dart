@@ -176,6 +176,17 @@ class DatabaseProvider {
     return restaurant;
   }
 
+  static Future<Map<Restaurant, int?>> getTop5() async {
+    final data = await supabase.rpc('get_top_5');
+    Map<Restaurant, int?> res = {};
+    for (var topData in data) {
+      Restaurant? restau =
+          await DatabaseProvider.getRestaurantById(topData['osm_id']);
+      res[restau!] = topData['rating'];
+    }
+    return res;
+  }
+
   static Future<List<Avis>> getAvisRestaurant(Restaurant restaurant) async {
     final data = await supabase
         .from('commentaire')
@@ -205,7 +216,7 @@ class DatabaseProvider {
 
   static Future<double?> getRestaurantNoteById(int osmId) async {
     final res = await supabase
-        .rpc('getnoterestaurant', params: {'restaurant_osm_id': osmId});
+        .rpc('get_note_restaurant', params: {'restaurant_osm_id': osmId});
     return res;
   }
 
