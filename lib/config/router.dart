@@ -8,7 +8,7 @@ import 'package:sae_mobile/src/screens/inscription_screen.dart';
 
 final GoRouter router = GoRouter(
     redirect: (context, state) {
-      final loggedIn = DatabaseProvider().isAuthenticated();
+      final loggedIn = DatabaseProvider.isAuthenticated();
       final goingToLogin = state.uri.toString() == '/';
       final goingToSignUp = state.uri.toString() == '/inscription';
 
@@ -33,15 +33,17 @@ final GoRouter router = GoRouter(
       GoRoute(
         path: '/detail/:id',
         builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return DetailScreen(id: id);
+          final restaurantId = state.pathParameters['id'];
+          return DetailsScreen(restaurantId: restaurantId!);
         },
+        routes: [
+          GoRoute(
+            path: 'avis',
+            builder: (context, state) {
+              final restaurantId = state.pathParameters['id'];
+              return AvisScreen(id: restaurantId!);
+            },
+          ),
+        ],
       ),
-      GoRoute(
-        path: '/detail/:id/avis',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return AvisScreen(id: id);
-        },
-      )
     ]);

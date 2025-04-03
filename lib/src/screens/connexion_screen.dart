@@ -84,7 +84,7 @@ class _ConnexionScreenState extends State<ConnexionScreen> {
 
     try {
       final success =
-          await DatabaseProvider().signIn(email: email, password: password);
+          await DatabaseProvider.signIn(email: email, password: password);
 
       setState(() {
         _isSubmitting = false;
