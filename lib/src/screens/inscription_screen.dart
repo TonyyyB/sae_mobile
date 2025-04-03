@@ -195,20 +195,22 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                       decoration: InputDecoration(
                         hintText: "Mot de passe",
                         errorText: _passwordError,
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _viewPassword = !_viewPassword;
-                            });
-                          },
-                          icon: Icon(_viewPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility),
-                          color: Theme.of(context)
-                              .inputDecorationTheme
-                              .enabledBorder!
-                              .borderSide
-                              .color,
+                        suffixIcon: ExcludeFocus(
+                          child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _viewPassword = !_viewPassword;
+                              });
+                            },
+                            icon: Icon(_viewPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            color: Theme.of(context)
+                                .inputDecorationTheme
+                                .enabledBorder!
+                                .borderSide
+                                .color,
+                          ),
                         ),
                       ),
                       obscureText: !_viewPassword,
@@ -237,8 +239,8 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                                 });
                               },
                               icon: Icon(_viewPasswordConfirm
-                                  ? Icons.visibility_off
-                                  : Icons.visibility),
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
                               color: Theme.of(context)
                                   .inputDecorationTheme
                                   .enabledBorder!
@@ -249,6 +251,17 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                           obscureText: !_viewPasswordConfirm,
                           textInputAction: TextInputAction.done,
                           autofillHints: const [AutofillHints.newPassword],
+                          onSubmitted: _isSubmitting
+                              ? null
+                              : (value) {
+                                  try {
+                                    TextInput.finishAutofillContext(
+                                        shouldSave: true);
+                                  } catch (e) {
+                                    print("Erreur autofill: $e");
+                                  }
+                                  _validateForm();
+                                },
                           onChanged: (value) {
                             if (_confirmPasswordError != null) {
                               setState(() {
