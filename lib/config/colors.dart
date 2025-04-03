@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class PickMenuColors {
   static const Color backgroundColorConnexion = Color(0xFFFFFFFF);
   static const Color textColor = Color(0xFF3D6247);
+  static const Color detailTextColor = Color(0xFF000000);
   static const Color spanTextColor = Color(0xFF000000);
   static const Color spanLinkColor = Color(0xFF3D6247);
   static const Color backgroundColor = Color(0xFFD7F0E0);
