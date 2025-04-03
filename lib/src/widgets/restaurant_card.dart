@@ -15,7 +15,7 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var typeCuisine = _restaurant.parseCuisine;
     typeCuisine ??= "Type de cuisine non spécifié";
-    var horaires = _restaurant.openingHours;
+    var horaires = _restaurant.parseOpeningHours;
     horaires ??= "      Horaires indisponibles";
     return Card(
         elevation: 10,
@@ -59,13 +59,13 @@ class RestaurantCard extends StatelessWidget {
                   child: Column(
                     children : [
                       Align(alignment: Alignment.topLeft,
-                                  child: Padding(padding: EdgeInsets.fromLTRB(16, 5, 16, 16), child :Text(_restaurant.getType, style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
+                                  child: Padding(padding: EdgeInsets.fromLTRB(16, 5, 16, 16), child :Text(_restaurant.type, style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
                       Align(alignment: Alignment.topLeft,
                                   child:Padding(padding: EdgeInsets.all(16), child :Text('Type de cuisine : \n      $typeCuisine', style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
                       Align(alignment: Alignment.topLeft,
                                   child:Padding(padding: EdgeInsets.all(16), child :Text("Horaires d'ouverture : \n$horaires", style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
                       Align(alignment: Alignment.bottomRight,
-                                  child:Padding(padding: EdgeInsets.all(16), child :FavoriteWidget(idRestau : _restaurant.getOsmId))),
+                                  child:Padding(padding: EdgeInsets.all(16), child :FavoriteWidget(idRestau : _restaurant.osmId))),
                     ])
                 ),
               ],
