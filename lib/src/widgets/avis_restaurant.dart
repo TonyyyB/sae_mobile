@@ -118,7 +118,6 @@ class _AvisRestaurantState extends State<AvisRestaurant> {
                     note: _note as double,
                     onNoteChange: (newValue) {
                       _note = newValue as int;
-                      print(_note);
                     },
                   ),
                   TextField(
