@@ -15,35 +15,40 @@ final GoRouter router = GoRouter(
       if (!loggedIn && !goingToLogin && !goingToSignUp) {
         return '/';
       }
+      if (loggedIn && (goingToLogin || goingToSignUp)) {
+        return '/home';
+      }
       return null; // Pas de redirection
     },
     routes: [
       GoRoute(
-        path: '/',
-        builder: (context, state) => ConnexionScreen(),
-      ),
+          path: '/',
+          builder: (context, state) => ConnexionScreen(),
+          routes: [
+            GoRoute(
+              path: '/inscription',
+              builder: (context, state) => InscriptionScreen(),
+            ),
+          ]),
       GoRoute(
-        path: '/inscription',
-        builder: (context, state) => InscriptionScreen(),
-      ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => HomeScreen(),
-      ),
-      GoRoute(
-        path: '/detail/:id',
-        builder: (context, state) {
-          final restaurantId = state.pathParameters['id'];
-          return DetailsScreen(restaurantId: restaurantId!);
-        },
-        routes: [
-          GoRoute(
-            path: 'avis',
-            builder: (context, state) {
-              final restaurantId = state.pathParameters['id'];
-              return AvisScreen(id: restaurantId!);
-            },
-          ),
-        ],
-      ),
+          path: '/home',
+          builder: (context, state) => HomeScreen(),
+          routes: [
+            GoRoute(
+              path: '/detail/:id',
+              builder: (context, state) {
+                final restaurantId = state.pathParameters['id'];
+                return DetailsScreen(restaurantId: restaurantId!);
+              },
+              routes: [
+                GoRoute(
+                  path: 'avis',
+                  builder: (context, state) {
+                    final restaurantId = state.pathParameters['id'];
+                    return AvisScreen(id: restaurantId!);
+                  },
+                ),
+              ],
+            ),
+          ]),
     ]);
