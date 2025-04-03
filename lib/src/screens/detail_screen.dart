@@ -104,7 +104,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           Text(
             restaurant.type,
             style:
-                PickMenuTheme.detailTextStyle(), // Custom text style from theme
+                PickMenuTheme.detailTextStyle(),
           ),
           SizedBox(height: 8),
           // Type de cuisine
@@ -220,18 +220,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
         children: [
           TileLayer(
-            // Bring your own tiles
+            
             urlTemplate:
-                'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // For demonstration only
+                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             tileProvider: CancellableNetworkTileProvider(),
           ),
           RichAttributionWidget(
-            // Include a stylish prebuilt attribution widget that meets all requirments
+            
             attributions: [
               TextSourceAttribution(
-                'OpenStreetMap contributors', // (external)
+                'OpenStreetMap contributors',
               ),
-              // Also add images...
             ],
           ),
           MarkerLayer(
