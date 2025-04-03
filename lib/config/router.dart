@@ -15,35 +15,38 @@ final GoRouter router = GoRouter(
       if (!loggedIn && !goingToLogin && !goingToSignUp) {
         return '/';
       }
+      if (loggedIn && (goingToLogin || goingToSignUp)) {
+        return '/home';
+      }
       return null; // Pas de redirection
     },
     routes: [
       GoRoute(
-        path: '/',
-        builder: (context, state) => ConnexionScreen(),
-      ),
-      GoRoute(
-        path: '/inscription',
-        builder: (context, state) => InscriptionScreen(),
-      ),
+          path: '/',
+          builder: (context, state) => ConnexionScreen(),
+          routes: [
+            GoRoute(
+              path: '/inscription',
+              builder: (context, state) => InscriptionScreen(),
+            ),
+          ]),
       GoRoute(
         path: '/home',
         builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
-        path: '/detail/:id',
-        builder: (context, state) {
-          final restaurantId = state.pathParameters['id'];
-          return DetailScreen(id: restaurantId!);
-        },
-        routes: [
-          GoRoute(
-            path: 'avis',
-            builder: (context, state) {
-              final restaurantId = state.pathParameters['id'];
-              return AvisScreen(id: int.parse(restaurantId!));
-            },
-          ),
-        ],
-      ),
+          path: '/detail/:id',
+          builder: (context, state) {
+            final restaurantId = int.parse(state.pathParameters['id']!);
+            return DetailsScreen(restaurantId: restaurantId);
+          },
+          routes: [
+            GoRoute(
+              path: 'avis',
+              builder: (context, state) {
+                final restaurantId = state.pathParameters['id'];
+                return AvisScreen(id: restaurantId!);
+              },
+            ),
+          ]),
     ]);

@@ -8,9 +8,9 @@ class Restaurant {
   final String _name;
   final String? _operator;
   final String? _brand;
-  final List<String>? _openingHours;
+  final List<String?>? _openingHours;
   final bool? _wheelchair;
-  List<String>? _cuisine;
+  final List<String>? _cuisine;
   final bool? _vegetarian;
   final bool? _vegan;
   final bool? _delivery;
@@ -33,7 +33,7 @@ class Restaurant {
       required String name,
       String? operator,
       String? brand,
-      List<String>? openingHours,
+      List<String?>? openingHours,
       bool? wheelchair,
       List<String>? cuisine,
       bool? vegetarian,
@@ -80,7 +80,7 @@ class Restaurant {
   String get name => _name;
   String? get operator => _operator;
   String? get brand => _brand;
-  List<String>? get openingHours => _openingHours;
+  List<String?>? get openingHours => _openingHours;
   bool? get wheelchair => _wheelchair;
   List<String>? get cuisine => _cuisine;
   bool? get vegetarian => _vegetarian;
@@ -105,13 +105,32 @@ class Restaurant {
     _avis!.add(avis);
   }
 
-  void addCuisine(String cuisineItem) {
-    _cuisine ??= [];
-    _cuisine!.add(cuisineItem);
-  }
 
   @override
   String toString() {
-    return 'Restaurant{name: $_name, type: $_type, region: $_region, departement: $_departement, commune: $_commune, cuisine: $_cuisine, vegetarian: $_vegetarian, vegan: $_vegan, delivery: $_delivery, takeaway: $_takeaway, phone: $_phone, website: $_website}';
+    return 'Restaurant{name: $_name, type: $_type, region: $_region, departement: $_departement, commune: $_commune, cuisine: $_cuisine, vegetarian: $_vegetarian, vegan: $_vegan, delivery: $_delivery, takeaway: $_takeaway, phone: $_phone, website: $_website, openingHours: $openingHours}';
+  }
+
+  double get getGlobalRate {
+    var res = 0.0;
+    var diviser = 0;
+    if (_avis == null) {
+      return 0.0;
+    }
+    for (var avis in _avis!) {
+      res += avis.note;
+      diviser += 1;
+    }
+    return res / diviser;
+  }
+
+  String? get parseCuisine{
+    if (_cuisine == null){return null;}
+    if (_cuisine.isEmpty){return null;}
+    var res = "";
+    for (var cook in _cuisine){
+      res += '$cook, ';
+    }
+    return res;
   }
 }

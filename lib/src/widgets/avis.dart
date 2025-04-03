@@ -54,7 +54,7 @@ class AvisWidget extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       avis.commentaire ?? "",
-                      style: PickMenuTheme.spanTextStyle(),
+                      style: PickMenuTheme.detailTextStyle(),
                     )),
               )
             ],

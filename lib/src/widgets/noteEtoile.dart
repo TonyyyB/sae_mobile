@@ -58,10 +58,7 @@ class NoteEtoile extends StatelessWidget {
     Row res = Row(children: <Widget>[]);
     for (var i = 0; i < 5; i++) {
       if (cpt >= 1) {
-        res.children.add(Icon(
-            color: iconColor,
-            size: size,
-            IconData(0xe5f9, fontFamily: 'MaterialIcons')));
+        res.children.add(star);
         cpt--;
       } else if (cpt > 0) {
         res.children.add(SingleRatingIcon(
@@ -71,10 +68,7 @@ class NoteEtoile extends StatelessWidget {
             rating: cpt));
         cpt = 0;
       } else if (cpt == 0) {
-        res.children.add(Icon(
-            color: PickMenuColors.inputDisabledBorder,
-            size: size,
-            IconData(0xe5f9, fontFamily: 'MaterialIcons')));
+        res.children.add(star_empty);
       }
     }
 
