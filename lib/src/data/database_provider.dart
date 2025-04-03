@@ -229,7 +229,7 @@ class DatabaseProvider {
     return avisList;
   }
 
-// TODO
+
   static Future<String?> postAvisRestaurant(Avis avis, File photo) async {
     return "UNIMPLEMENTED";
   }
@@ -274,5 +274,45 @@ class DatabaseProvider {
       err = error.toString();
     });
     return err;
+  }
+
+  static Future<String?> updateUserInfo({
+    required String nom,
+    required String prenom,
+    String? password,
+  }) async {
+    final user = getUser();
+    if (user == null) {
+      return "Utilisateur non connecté";
+    }
+
+    String? err;
+
+    await supabase
+        .from("utilisateur")
+        .update({
+      "nom_utilisateur": nom,
+      "prenom_utilisateur": prenom,
+    })
+        .eq("uuid", user.id)
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+
+    if (err != null) {
+      return err;
+    }
+
+    if (password != null && password.isNotEmpty) {
+      try {
+        await supabase.auth.updateUser(
+          UserAttributes(password: password),
+        );
+      } catch (e) {
+        return e.toString();
+      }
+    }
+
+    return null;
   }
 }

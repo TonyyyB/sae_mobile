@@ -6,6 +6,8 @@ import 'package:sae_mobile/src/screens/detail_screen.dart';
 import 'package:sae_mobile/src/screens/home_screen.dart';
 import 'package:sae_mobile/src/screens/inscription_screen.dart';
 
+import '../src/screens/user_screen.dart';
+
 final GoRouter router = GoRouter(
     redirect: (context, state) {
       final loggedIn = DatabaseProvider.isAuthenticated();
@@ -49,4 +51,8 @@ final GoRouter router = GoRouter(
               },
             ),
           ]),
+      GoRoute(
+        path: '/profil',
+        builder: (context, state) => const UserScreen(),
+      ),
     ]);
