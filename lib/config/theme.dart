@@ -59,6 +59,8 @@ class PickMenuTheme {
         letterSpacing: 0.15,
         fontFamily: 'LXGWWenKaiMonoTC',
         color: PickMenuColors.detailTextColor);
+  }
+
   static TextStyle elevatedButtonTextStyle() {
     return TextStyle(
         fontSize: 28.0,

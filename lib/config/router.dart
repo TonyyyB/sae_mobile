@@ -31,24 +31,22 @@ final GoRouter router = GoRouter(
             ),
           ]),
       GoRoute(
-          path: '/home',
-          builder: (context, state) => HomeScreen(),
+        path: '/home',
+        builder: (context, state) => HomeScreen(),
+      ),
+      GoRoute(
+          path: '/detail/:id',
+          builder: (context, state) {
+            final restaurantId = int.parse(state.pathParameters['id']!);
+            return DetailsScreen(restaurantId: restaurantId);
+          },
           routes: [
             GoRoute(
-              path: '/detail/:id',
+              path: 'avis',
               builder: (context, state) {
                 final restaurantId = state.pathParameters['id'];
-                return DetailsScreen(restaurantId: restaurantId!);
+                return AvisScreen(id: restaurantId!);
               },
-              routes: [
-                GoRoute(
-                  path: 'avis',
-                  builder: (context, state) {
-                    final restaurantId = state.pathParameters['id'];
-                    return AvisScreen(id: restaurantId!);
-                  },
-                ),
-              ],
             ),
           ]),
     ]);
