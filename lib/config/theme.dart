@@ -29,6 +29,38 @@ class PickMenuTheme {
         color: PickMenuColors.inputErrorText);
   }
 
+  static TextStyle detailClickableTextStyle() {
+    return TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.15,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        decoration: TextDecoration.underline,
+        color: PickMenuColors.textColor);
+  }
+
+  static TextStyle detailTitleTextStyle() {
+    return TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.15,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        decoration: TextDecoration.underline,
+        color: PickMenuColors.detailTextColor);
+  }
+
+  static TextStyle detailTextStyle() {
+    return TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.15,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        color: PickMenuColors.detailTextColor);
+  }
+
   static TextStyle elevatedButtonTextStyle() {
     return TextStyle(
         fontSize: 28.0,
