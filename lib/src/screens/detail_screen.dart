@@ -103,14 +103,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
         children: [
           Text(
             restaurant.type,
-            style:
-                PickMenuTheme.detailTextStyle(),
+            style: PickMenuTheme.detailTextStyle(),
           ),
           SizedBox(height: 8),
           // Type de cuisine
           Text("Types de cuisine :",
               style: PickMenuTheme.detailTitleTextStyle()),
-          Text('\t\t${restaurant.cuisine?.join(", ") ?? 'Non renseignée'}',
+          Text(
+              restaurant.cuisine == null
+                  ? '\t\tNon renseigné'
+                  : restaurant.cuisine!.isEmpty
+                      ? '\t\tNon renseigné'
+                      : '\t\t${restaurant.cuisine?.join(", ")}',
               style: PickMenuTheme.detailTextStyle()),
           SizedBox(height: 8),
           // Horaires d'ouverture
@@ -220,18 +224,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
         children: [
           TileLayer(
-            
-            urlTemplate:
-                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             tileProvider: CancellableNetworkTileProvider(),
-          ),
-          RichAttributionWidget(
-            
-            attributions: [
-              TextSourceAttribution(
-                'OpenStreetMap contributors',
-              ),
-            ],
           ),
           MarkerLayer(
             markers: [
