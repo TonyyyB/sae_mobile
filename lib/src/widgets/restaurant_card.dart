@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/src/widgets/favorie_widget.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../../config/colors.dart';
 import '../../models/restaurant.dart';
@@ -55,35 +56,20 @@ class RestaurantCard extends StatelessWidget {
               ),
               Padding(
                   padding: EdgeInsets.all(16),
-                  child: Column(children: [
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(16, 5, 16, 16),
-                            child: Text(_restaurant.type,
-                                style: TextStyle(
-                                    color: PickMenuColors.inputHint,
-                                    fontSize: 16)))),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Text(
-                                'Type de cuisine : \n      $typeCuisine',
-                                style: TextStyle(
-                                    color: PickMenuColors.inputHint,
-                                    fontSize: 16)))),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Text("Horaires d'ouverture : \n$horaires",
-                                style: TextStyle(
-                                    color: PickMenuColors.inputHint,
-                                    fontSize: 16)))),
-                  ])),
-            ],
-          ),
-        ));
+                  child: Column(
+                    children : [
+                      Align(alignment: Alignment.topLeft,
+                                  child: Padding(padding: EdgeInsets.fromLTRB(16, 5, 16, 16), child :Text(_restaurant.getType, style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
+                      Align(alignment: Alignment.topLeft,
+                                  child:Padding(padding: EdgeInsets.all(16), child :Text('Type de cuisine : \n      $typeCuisine', style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
+                      Align(alignment: Alignment.topLeft,
+                                  child:Padding(padding: EdgeInsets.all(16), child :Text("Horaires d'ouverture : \n$horaires", style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
+                      Align(alignment: Alignment.bottomRight,
+                                  child:Padding(padding: EdgeInsets.all(16), child :FavoriteWidget(idRestau : _restaurant.getOsmId))),
+                    ])
+                ),
+              ],
+            ),
+          ));
   }
 }
