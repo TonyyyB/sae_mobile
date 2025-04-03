@@ -46,13 +46,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
           );
         } else if (snapshot.hasData) {
           Restaurant restaurant = snapshot.data!;
-          child = Card(
-            elevation: 10,
-            clipBehavior: Clip.antiAlias,
-            margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
+          child = SingleChildScrollView(
+            child: Card(
+              elevation: 10,
+              clipBehavior: Clip.antiAlias,
+              margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
                     Row(
