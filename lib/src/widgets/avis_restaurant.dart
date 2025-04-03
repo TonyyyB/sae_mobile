@@ -5,6 +5,7 @@ import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/models/restaurant.dart';
 import 'package:sae_mobile/src/data/database_provider.dart';
 import 'package:sae_mobile/src/widgets/avis.dart';
+import 'package:sae_mobile/src/widgets/etoile_buttons.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 
 class AvisRestaurant extends StatefulWidget {
@@ -37,6 +38,8 @@ class _AvisRestaurantState extends State<AvisRestaurant> {
         );
       } else {
         widget.restaurant.addAvis(avis);
+        _commentaireController.text = "";
+        _note = 5;
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -111,36 +114,12 @@ class _AvisRestaurantState extends State<AvisRestaurant> {
                     child: Text("Ajouter votre avis :",
                         style: PickMenuTheme.importantTextStyle()),
                   ),
-                  Row(
-                    //children: [const Text("Note: "), NoteEtoile(rating: 5)],
-                    children: [
-                      const Text("Note: "),
-                      ElevatedButton(
-                          onPressed: () {
-                            _note = 1;
-                          },
-                          child: const Text("1")),
-                      ElevatedButton(
-                          onPressed: () {
-                            _note = 2;
-                          },
-                          child: const Text("2")),
-                      ElevatedButton(
-                          onPressed: () {
-                            _note = 3;
-                          },
-                          child: const Text("3")),
-                      ElevatedButton(
-                          onPressed: () {
-                            _note = 4;
-                          },
-                          child: const Text("4")),
-                      ElevatedButton(
-                          onPressed: () {
-                            _note = 5;
-                          },
-                          child: const Text("5")),
-                    ],
+                  EtoileButtons(
+                    note: _note as double,
+                    onNoteChange: (newValue) {
+                      _note = newValue as int;
+                      print(_note);
+                    },
                   ),
                   TextField(
                     controller: _commentaireController,
