@@ -21,12 +21,20 @@ class DatabaseProvider {
     }
   }
 
-  static Future<String?> signUp(
-      {required String email, required String password}) async {
+  Future<String?> signUp(
+      {required String nom,
+      required String prenom,
+      required String email,
+      required String password}) async {
     try {
       final response =
           await supabase.auth.signUp(email: email, password: password);
       if (response.user != null) {
+        await supabase.from("utilisateur").insert({
+          "uuid": response.user?.id,
+          "nom_utilisateur": nom,
+          "prenom_utilisateur": prenom
+        });
         return null;
       }
       return "Erreur inconnue lors de l'inscription";
@@ -203,7 +211,7 @@ class DatabaseProvider {
     final data = await supabase
         .from('commentaire')
         .select()
-        .eq('osm_id', restaurant.osmId);
+        .eq('osm_id', restaurant.getOsmId);
 
     List<Avis> avisList = [];
 
@@ -233,7 +241,7 @@ class DatabaseProvider {
   }
 
   static Future<double?> getRestaurantNote(Restaurant restaurant) async {
-    return getRestaurantNoteById(restaurant.osmId);
+    return getRestaurantNoteById(restaurant.getOsmId);
   }
 
   static Future<int?> getCuisineId(String nomCuisine) async {
