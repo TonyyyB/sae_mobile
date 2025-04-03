@@ -35,6 +35,28 @@ class DatabaseProvider {
     }
   }
 
+  static Future<(String, String)?> getNomPrenom(String uuid) async {
+    final response =
+        await supabase.from('utilisateur').select().eq('uuid', uuid).limit(1);
+
+    if (response.isEmpty) {
+      return null;
+    }
+
+    final res = response[0];
+
+    return res['nom_utilisateur'] == null || res['prenom_utilisateur'] == null
+        ? null
+        : (
+            res['nom_utilisateur'] as String,
+            res['prenom_utilisateur'] as String
+          );
+  }
+
+  static Future<(String, String)?> getSelfNomPrenom() async {
+    return getNomPrenom(supabase.auth.currentUser!.id);
+  }
+
   static bool isAuthenticated() => supabase.auth.currentSession != null;
 
   static User? getUser() {
@@ -106,7 +128,7 @@ class DatabaseProvider {
     final rawData = await supabase
         .from('restaurant')
         .select(
-        "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style)")
+            "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style), horaires(osm_id,lundi,mardi,mercredi,jeudi,vendredi,samedi,dimanche)")
         .eq('osm_id', osmId);
     if (rawData.isEmpty) {
       return null;
@@ -116,10 +138,27 @@ class DatabaseProvider {
     for (var cuisine in data['style_cuisine']) {
       cuisines.add(cuisine['nom_style']);
     }
+
+    List<String?>? horaires;
+    if (data['horaires'] != null) {
+      horaires = [];
+      for (var day in [
+        'Lundi',
+        'Mardi',
+        'Mercredi',
+        'Jeudi',
+        'Vendredi',
+        'Samedi',
+        'Dimanche'
+      ]) {
+        horaires.add("$day: ${data['horaires'][day.toLowerCase()] ?? "Fermé"}");
+      }
+    }
     Restaurant restaurant = Restaurant(
       osmId: data['osm_id'],
       longitude: data['longitude'],
       latitude: data['latitude'],
+      openingHours: horaires,
       type: data['type_restaurant']['nom_type'],
       cuisine: cuisines,
       name: data['nom_res'],

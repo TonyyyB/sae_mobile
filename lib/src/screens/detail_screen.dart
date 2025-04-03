@@ -1,12 +1,16 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:sae_mobile/config/router.dart';
+import 'package:sae_mobile/config/theme.dart';
 import 'package:sae_mobile/models/restaurant.dart';
 import 'package:sae_mobile/models/avis.dart';
-import 'package:sae_mobile/config/colors.dart';
+import 'package:sae_mobile/src/widgets/avis.dart';
+import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../data/database_provider.dart';
 import '../widgets/scaffold.dart';
-
-
 
 class DetailsScreen extends StatefulWidget {
   final int restaurantId;
@@ -18,184 +22,272 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-
-
   @override
   void initState() {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Restaurant?>(
-    future: DatabaseProvider.getRestaurantById(widget.restaurantId, loadAvis: true),
-    builder: (context, snapshot) {
-      Widget child = Text(
-        "Le restaurant d'id ${widget.restaurantId} n'existe pas !",
-        style: Theme.of(context).textTheme.bodyLarge,
-      );
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        child = CircularProgressIndicator();
-      } else if (snapshot.hasError) {
-        child = Text(
-          "Une erreur s'est produite: ${snapshot.error}",
+      future: DatabaseProvider.getRestaurantById(widget.restaurantId,
+          loadAvis: true),
+      builder: (context, snapshot) {
+        Widget child = Text(
+          "Le restaurant d'id ${widget.restaurantId} n'existe pas !",
           style: Theme.of(context).textTheme.bodyLarge,
         );
-      }
-
-      else if (snapshot.hasData) {
-        Restaurant restaurant = snapshot.data!;
-        child = SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildRestaurantInfo(restaurant),
-                _buildRestaurantMap(restaurant),
-                _buildAvisSection(restaurant),
-                _buildVoirPlusButton(),
-              ],
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          child = CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          child = Text(
+            "Une erreur s'est produite: ${snapshot.error}",
+            style: Theme.of(context).textTheme.bodyLarge,
+          );
+        } else if (snapshot.hasData) {
+          Restaurant restaurant = snapshot.data!;
+          child = Card(
+            elevation: 10,
+            clipBehavior: Clip.antiAlias,
+            margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            restaurant.name,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: NoteEtoile(
+                                rating: restaurant.avis == null
+                                    ? 0
+                                    : (restaurant.avis!.fold(
+                                            0, (total, e) => total + e.note)) /
+                                        restaurant.avis!.length)),
+                      ],
+                    ),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Divider(
+                          thickness: 1.5,
+                          color:
+                              Theme.of(context).textTheme.headlineMedium!.color,
+                        )),
+                    _buildRestaurantInfo(restaurant),
+                    _buildRestaurantMap(restaurant),
+                  ],
+                ),
+              ),
             ),
-        );
-      }
-      return PickMenuScaffold(child: child);
+          );
+        }
+        return PickMenuScaffold(child: child);
       },
     );
   }
 
   Widget _buildRestaurantInfo(Restaurant restaurant) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            restaurant.name ?? 'Nom non disponible',
-            style: Theme.of(context).textTheme.headlineMedium,  // Custom text style from theme
+            restaurant.type,
+            style:
+                PickMenuTheme.detailTextStyle(), // Custom text style from theme
           ),
           SizedBox(height: 8),
-          Text(
-            'Type: ${restaurant.type ?? 'Non renseigné'}',
-            style: Theme.of(context).textTheme.titleMedium,  // Custom text style from theme
-          ),
+          // Type de cuisine
+          Text("Types de cuisine :",
+              style: PickMenuTheme.detailTitleTextStyle()),
+          Text('\t\t${restaurant.cuisine?.join(", ") ?? 'Non renseignée'}',
+              style: PickMenuTheme.detailTextStyle()),
           SizedBox(height: 8),
-          Text(
-            'Cuisine: ${restaurant.cuisine?.join(", ") ?? 'Non renseignée'}',
-            style: Theme.of(context).textTheme.titleMedium,  // Custom text style from theme
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Localisation: ${restaurant.region}, ${restaurant.departement}, ${restaurant.commune}',
-            style: Theme.of(context).textTheme.titleMedium,  // Custom text style from theme
-          ),
-          SizedBox(height: 8),
+          // Horaires d'ouverture
+          Text("Horaires d'ouverture :",
+              style: PickMenuTheme.detailTitleTextStyle()),
           _buildOpeningHours(restaurant),
+          SizedBox(height: 8),
+          // Options
+          Text("Option disponibles :",
+              style: PickMenuTheme.detailTitleTextStyle()),
+          _buildOptions(restaurant),
+          SizedBox(height: 8),
+          // Contact
+          Text("Contact :", style: PickMenuTheme.detailTitleTextStyle()),
+          _buildContact(restaurant),
+          SizedBox(height: 8),
+          // Avis
+          Text("Avis :", style: PickMenuTheme.detailTitleTextStyle()),
+          _buildAvisSection(restaurant),
+          SizedBox(height: 8)
         ],
       ),
     );
   }
 
-
-  Widget _buildOpeningHours(Restaurant restaurant) {
+  Widget _buildOptions(Restaurant restaurant) {
+    final Map<String, bool?> options = {
+      "Végétarien": restaurant.vegetarian,
+      "Végan": restaurant.vegan,
+      "Livraison": restaurant.delivery,
+      "Accès fauteil roulant": restaurant.wheelchair,
+      "Click&Collect": restaurant.takeaway,
+      "Drive": restaurant.driveThrough
+    };
+    options.removeWhere((k, v) => v == null || v == false);
+    if (options.isEmpty) {
+      return Text(
+        "\t\tAucune option n'est disponnible",
+        style: PickMenuTheme.detailTextStyle(),
+      );
+    }
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (restaurant.openingHours != null)
-            ...restaurant.openingHours!.map((jour) => Text(jour!)).toList()
-          else
-            Text('Aucune horaires disponible'),
-        ]
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: options.entries
+          .map((e) => Align(
+              alignment: Alignment.centerLeft,
+              child: Text('\t\t- ${e.key}',
+                  style: PickMenuTheme.detailTextStyle())))
+          .toList(),
     );
   }
 
+  Widget _buildContact(Restaurant restaurant) {
+    final Map<String, String?> contact = {
+      "Téléphone": restaurant.phone,
+      "Site web": restaurant.website,
+      "Facebook": restaurant.facebook
+    };
+    contact.removeWhere((k, v) => v == null || v.isEmpty);
+    if (contact.isEmpty) {
+      return Text(
+        "\t\tAucun contact n'est disponnible",
+        style: PickMenuTheme.detailTextStyle(),
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: contact.entries
+          .map((e) => Align(
+              alignment: Alignment.centerLeft,
+              child: RichText(
+                  text: TextSpan(children: [
+                TextSpan(
+                    text: '\t\t- ${e.key} : ',
+                    style: PickMenuTheme.detailTextStyle()),
+                TextSpan(
+                    text: e.value,
+                    style: PickMenuTheme.detailClickableTextStyle())
+              ]))))
+          .toList(),
+    );
+  }
+
+  Widget _buildOpeningHours(Restaurant restaurant) {
+    if (restaurant.openingHours == null) {
+      return Text("Aucun horraire disponnible",
+          style: PickMenuTheme.detailTextStyle());
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: restaurant.openingHours!
+          .map((e) => Align(
+              alignment: Alignment.centerLeft,
+              child: Text('\t\t${e ?? "Fermé"}',
+                  style: PickMenuTheme.detailTextStyle())))
+          .toList(),
+    );
+  }
 
   Widget _buildRestaurantMap(Restaurant restaurant) {
     return Container(
-      height: 250,
-      child: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: LatLng(restaurant.latitude ?? 0.0, restaurant.longitude ?? 0.0),
-          zoom: 14.0,
+      height: 500,
+      child: FlutterMap(
+        options: MapOptions(
+          initialCenter: LatLng(restaurant.latitude, restaurant.longitude),
+          initialZoom: 15,
         ),
-        markers: {
-          Marker(
-            markerId: MarkerId(restaurant.osmId.toString()),
-            position: LatLng(restaurant.latitude ?? 0.0, restaurant.longitude ?? 0.0),
-            infoWindow: InfoWindow(title: restaurant.name ?? 'Restaurant'),
-          ),
-        },
-      ),
-    );
-  }
-
-
-  Widget _buildAvisSection(Restaurant restaurant) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Avis',
-            style: Theme.of(context).textTheme.titleMedium,
+          TileLayer(
+            // Bring your own tiles
+            urlTemplate:
+                'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // For demonstration only
+            tileProvider: CancellableNetworkTileProvider(),
           ),
-          SizedBox(height: 8),
-          if (restaurant.avis != null) ...[
-            if(restaurant.avis!.length == 1)...[
-              _buildAvisItem(restaurant.avis![0])
-            ] else if (restaurant.avis!.length > 1)...[
-              _buildAvisItem(restaurant.avis![0]),
-              _buildAvisItem(restaurant.avis![1]),
-            ]
-
-          ] else ...[
-            Text('Aucun avis disponible'),
-          ],
+          RichAttributionWidget(
+            // Include a stylish prebuilt attribution widget that meets all requirments
+            attributions: [
+              TextSourceAttribution(
+                'OpenStreetMap contributors', // (external)
+              ),
+              // Also add images...
+            ],
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: LatLng(restaurant.latitude, restaurant.longitude),
+                width: 40,
+                height: 40,
+                child:
+                    const Icon(Icons.location_pin, color: Colors.red, size: 40),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-
-  Widget _buildAvisItem(Avis avis) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.star, color: Colors.yellow),
-                  SizedBox(width: 5),
-                  Text('${avis.note ?? 0}', style: TextStyle(fontSize: 16)),
-                ],
-              ),
-              SizedBox(height: 8),
-              Text(avis.commentaire ?? 'Aucun commentaire'),
-            ],
-          ),
+  Widget _buildAvisSection(Restaurant restaurant) {
+    Widget content = Text("\t\tAucun avis pour le moment",
+        style: PickMenuTheme.detailTextStyle());
+    if (restaurant.avis != null) {
+      List<Avis> avis = [restaurant.avis![0]];
+      if (restaurant.avis!.length > 1) {
+        avis.add(restaurant.avis![1]);
+      }
+      content = Column(
+        children: avis
+            .map((e) => Card(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AvisWidget(avis: e),
+                )))
+            .toList(),
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: content,
         ),
-      ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: RichText(
+            text: TextSpan(
+                text: "Voir plus d'avis >",
+                style: PickMenuTheme.detailClickableTextStyle(),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    router.push("/detail/${restaurant.osmId}/avis");
+                  }),
+          ),
+        )
+      ],
     );
   }
-
-
-  Widget _buildVoirPlusButton() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: ElevatedButton(
-        onPressed: () {
-          //Navigator.push(
-          //context,
-          //MaterialPageRoute(
-          //builder: (context) => AvisScreen(restaurant: Restaurant),
-          //),
-          // );
-        },
-        child: Text('Voir plus d\'avis', style: Theme.of(context).textTheme.bodyMedium,))
-  );
-  }
 }
-
