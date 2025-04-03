@@ -12,7 +12,7 @@ class FavoriteWidget extends StatefulWidget {
   }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool _isFavorited = true;
+  bool _isFavorited = false;
   int _idRestau;
 
    _FavoriteWidgetState({required int idRestau}):
@@ -24,7 +24,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
         _isFavorited = false;
       } else {
         _isFavorited = true;
-        DatabaseProvider.addFavoriRestaurant(restaurantId : this._idRestau);
+        DatabaseProvider.addFavoriRestaurant(this._idRestau);
       }
     });
   }
