@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
     return FutureBuilder<List<Restaurant>>(
       future: DatabaseProvider.getAllRestaurants(),
       builder: (context, snapshot) {
-        switch(snapshot.connectionState) {
+        switch (snapshot.connectionState) {
           case ConnectionState.waiting:
             return Text('Loading...');
           default:
@@ -29,17 +29,13 @@ class HomeScreen extends StatelessWidget {
               var intValue = Random().nextInt(25);
               restaus.add(data[intValue]);
             }
-            print([for(var i in restaus) i]);
             return PickMenuScaffold(
-              child: Expanded(
                 child: ListView.builder(
-                  itemCount: restaus.length,
-                  itemBuilder: (context, index) {
-                    return RestaurantCard(restau: restaus[index]);
-                  },
-                ),
-              )
-            );
+              itemCount: restaus.length,
+              itemBuilder: (context, index) {
+                return RestaurantCard(restau: restaus[index]);
+              },
+            ));
         }
       },
     );

@@ -10,7 +10,7 @@ class Restaurant {
   final String? _brand;
   final List<String?>? _openingHours;
   final bool? _wheelchair;
-  final List<String>? _cuisine;
+  List<String>? _cuisine;
   final bool? _vegetarian;
   final bool? _vegan;
   final bool? _delivery;
@@ -105,7 +105,6 @@ class Restaurant {
     _avis!.add(avis);
   }
 
-
   @override
   String toString() {
     return 'Restaurant{name: $_name, type: $_type, region: $_region, departement: $_departement, commune: $_commune, cuisine: $_cuisine, vegetarian: $_vegetarian, vegan: $_vegan, delivery: $_delivery, takeaway: $_takeaway, phone: $_phone, website: $_website, openingHours: $openingHours}';
@@ -124,12 +123,27 @@ class Restaurant {
     return res / diviser;
   }
 
-  String? get parseCuisine{
-    if (_cuisine == null){return null;}
-    if (_cuisine.isEmpty){return null;}
+  String? get parseCuisine {
+    if (_cuisine == null) {
+      return null;
+    }
+    if (_cuisine!.isEmpty) {
+      return null;
+    }
     var res = "";
-    for (var cook in _cuisine){
+    for (var cook in _cuisine!) {
       res += '$cook, ';
+    }
+    return res;
+  }
+
+  String? get parseOpeningHours {
+    if (_openingHours == null) {
+      return null;
+    }
+    var res = "";
+    for (var horaire in _openingHours) {
+      res += '      $horaire\n';
     }
     return res;
   }

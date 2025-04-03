@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/config/router.dart';
 import 'package:sae_mobile/src/widgets/favorie_widget.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../../config/colors.dart';
@@ -15,7 +16,7 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var typeCuisine = _restaurant.parseCuisine;
     typeCuisine ??= "Type de cuisine non spécifié";
-    var horaires = _restaurant.openingHours;
+    var horaires = _restaurant.parseOpeningHours;
     horaires ??= "      Horaires indisponibles";
     return Card(
         elevation: 10,
@@ -23,8 +24,7 @@ class RestaurantCard extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
         child: GestureDetector(
           onTap: () {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Click')));
+            router.push("/detail/${_restaurant.osmId}");
           },
           child: Column(
             children: [
@@ -56,20 +56,41 @@ class RestaurantCard extends StatelessWidget {
               ),
               Padding(
                   padding: EdgeInsets.all(16),
-                  child: Column(
-                    children : [
-                      Align(alignment: Alignment.topLeft,
-                                  child: Padding(padding: EdgeInsets.fromLTRB(16, 5, 16, 16), child :Text(_restaurant.getType, style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
-                      Align(alignment: Alignment.topLeft,
-                                  child:Padding(padding: EdgeInsets.all(16), child :Text('Type de cuisine : \n      $typeCuisine', style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
-                      Align(alignment: Alignment.topLeft,
-                                  child:Padding(padding: EdgeInsets.all(16), child :Text("Horaires d'ouverture : \n$horaires", style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
-                      Align(alignment: Alignment.bottomRight,
-                                  child:Padding(padding: EdgeInsets.all(16), child :FavoriteWidget(idRestau : _restaurant.getOsmId))),
-                    ])
-                ),
-              ],
-            ),
-          ));
+                  child: Column(children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(16, 5, 16, 16),
+                            child: Text(_restaurant.type,
+                                style: TextStyle(
+                                    color: PickMenuColors.inputHint,
+                                    fontSize: 16)))),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text(
+                                'Type de cuisine : \n      $typeCuisine',
+                                style: TextStyle(
+                                    color: PickMenuColors.inputHint,
+                                    fontSize: 16)))),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text("Horaires d'ouverture : \n$horaires",
+                                style: TextStyle(
+                                    color: PickMenuColors.inputHint,
+                                    fontSize: 16)))),
+                    Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child:
+                                FavoriteWidget(idRestau: _restaurant.osmId))),
+                  ])),
+            ],
+          ),
+        ));
   }
 }
