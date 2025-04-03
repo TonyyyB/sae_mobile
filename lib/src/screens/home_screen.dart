@@ -29,12 +29,11 @@ class HomeScreen extends StatelessWidget {
         departement: "Loiret",
         commune: "Orléans");
     return PickMenuScaffold(
-      child: Expanded(
-          child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return RestaurantCard(restau: restau);
-              })),
+      child: ListView.builder(
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return RestaurantCard(restau: restau);
+          }),
     );
   }
 }

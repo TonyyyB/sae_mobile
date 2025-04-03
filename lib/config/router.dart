@@ -35,6 +35,13 @@ final GoRouter router = GoRouter(
         builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
+        path: "/search",
+        builder: (context, state) {
+          print(state.extra);
+          return HomeScreen();
+        },
+      ),
+      GoRoute(
           path: '/detail/:id',
           builder: (context, state) {
             final restaurantId = int.parse(state.pathParameters['id']!);
