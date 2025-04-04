@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/models/restaurant.dart';
+import 'package:sae_mobile/src/widgets/filter_panel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseProvider {
@@ -21,7 +22,7 @@ class DatabaseProvider {
     }
   }
 
-  Future<String?> signUp(
+  static Future<String?> signUp(
       {required String nom,
       required String prenom,
       required String email,
@@ -75,73 +76,7 @@ class DatabaseProvider {
     await supabase.auth.signOut();
   }
 
-  static Future<List<Restaurant>> getAllRestaurants() async {
-    final data = await supabase.from('restaurant').select(
-        "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style), horaires(osm_id,lundi,mardi,mercredi,jeudi,vendredi,samedi,dimanche)");
-    List<Restaurant> restaurants = [];
-    for (var res in data) {
-      List<String> cuisines = [];
-      for (var cuisine in res['style_cuisine']) {
-        cuisines.add(cuisine['nom_style']);
-      }
-
-      List<String?>? horaires;
-      if (res['horaires'] != null) {
-        horaires = [];
-        for (var day in [
-          'Lundi',
-          'Mardi',
-          'Mercredi',
-          'Jeudi',
-          'Vendredi',
-          'Samedi',
-          'Dimanche'
-        ]) {
-          horaires
-              .add("$day: ${res['horaires'][day.toLowerCase()] ?? "Fermé"}");
-        }
-      }
-
-      Restaurant restaurant = Restaurant(
-        osmId: res['osm_id'],
-        openingHours: horaires,
-        longitude: res['longitude'],
-        latitude: res['latitude'],
-        type: res['type_restaurant']['nom_type'],
-        cuisine: cuisines,
-        name: res['nom_res'],
-        operator: res['operator'],
-        brand: res['brand'],
-        wheelchair: res['wheelchair'],
-        vegetarian: res['vegetarien'],
-        vegan: res['vegan'],
-        delivery: res['delivery'],
-        takeaway: res['takeaway'],
-        capacity: res['capacity'],
-        driveThrough: res['drive_through'],
-        phone: res['phone'],
-        website: res['website'],
-        facebook: res['facebook'],
-        region: res['region'],
-        departement: res['departement'],
-        commune: res['commune'],
-      );
-      restaurants.add(restaurant);
-    }
-    return restaurants;
-  }
-
-  static Future<Restaurant?> getRestaurantById(int osmId,
-      {bool loadAvis = false}) async {
-    final rawData = await supabase
-        .from('restaurant')
-        .select(
-            "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style), horaires(osm_id,lundi,mardi,mercredi,jeudi,vendredi,samedi,dimanche)")
-        .eq('osm_id', osmId);
-    if (rawData.isEmpty) {
-      return null;
-    }
-    final data = rawData[0];
+  static Restaurant _mapToRestaurant(Map<String, dynamic> data) {
     List<String> cuisines = [];
     for (var cuisine in data['style_cuisine']) {
       cuisines.add(cuisine['nom_style']);
@@ -162,7 +97,7 @@ class DatabaseProvider {
         horaires.add("$day: ${data['horaires'][day.toLowerCase()] ?? "Fermé"}");
       }
     }
-    Restaurant restaurant = Restaurant(
+    return Restaurant(
       osmId: data['osm_id'],
       longitude: data['longitude'],
       latitude: data['latitude'],
@@ -186,6 +121,31 @@ class DatabaseProvider {
       departement: data['departement'],
       commune: data['commune'],
     );
+  }
+
+  static Future<List<Restaurant>> getAllRestaurants() async {
+    final data = await supabase.from('restaurant').select(
+        "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style), horaires(osm_id,lundi,mardi,mercredi,jeudi,vendredi,samedi,dimanche)");
+    List<Restaurant> restaurants = [];
+    for (var res in data) {
+      restaurants.add(_mapToRestaurant(res));
+    }
+    return restaurants;
+  }
+
+  static Future<Restaurant?> getRestaurantById(int osmId,
+      {bool loadAvis = false}) async {
+    final rawData = await supabase
+        .from('restaurant')
+        .select(
+            "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style), horaires(osm_id,lundi,mardi,mercredi,jeudi,vendredi,samedi,dimanche)")
+        .eq('osm_id', osmId);
+    if (rawData.isEmpty) {
+      return null;
+    }
+    final data = rawData[0];
+
+    final restaurant = _mapToRestaurant(data);
 
     if (loadAvis) {
       final List<Avis> avis = await getAvisRestaurant(restaurant);
@@ -196,15 +156,19 @@ class DatabaseProvider {
     return restaurant;
   }
 
-  static Future<Map<Restaurant, int?>> getTop5() async {
+  static Future<(List<Restaurant>, List<double?>)> getTop5() async {
     final data = await supabase.rpc('get_top_5');
-    Map<Restaurant, int?> res = {};
-    for (var topData in data) {
+    List<Restaurant> restaurants = [];
+    List<double?> notes = [];
+    for (var resData in data) {
       Restaurant? restau =
-          await DatabaseProvider.getRestaurantById(topData['osm_id']);
-      res[restau!] = topData['rating'];
+          await DatabaseProvider.getRestaurantById(resData['osm_id']);
+      if (restau != null) {
+        restaurants.add(restau);
+        notes.add(resData['rating']);
+      }
     }
-    return res;
+    return (restaurants, notes);
   }
 
   static Future<List<Avis>> getAvisRestaurant(Restaurant restaurant) async {
@@ -229,9 +193,16 @@ class DatabaseProvider {
     return avisList;
   }
 
-
-  static Future<String?> postAvisRestaurant(Avis avis, File photo) async {
-    return "UNIMPLEMENTED";
+// TODO la photo ne fonctionne pas
+  static Future<String?> postAvisRestaurant(Avis avis, File? photo) async {
+    String? err;
+    await supabase
+        .from('commentaire')
+        .insert(avis.insert())
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+    return err;
   }
 
   static Future<double?> getRestaurantNoteById(int osmId) async {
@@ -250,6 +221,14 @@ class DatabaseProvider {
         .select('style_id')
         .eq('nom_style', nomCuisine)
         .single())['style_id'];
+  }
+
+  static Future<String?> getTypeId(String nomStyle) async {
+    return (await supabase
+        .from('type_restaurant')
+        .select('type_id')
+        .eq('nom_type', nomStyle)
+        .single())['type_id'];
   }
 
   static Future<String?> addFavoriRestaurant(int restaurantId) async {
@@ -358,12 +337,137 @@ class DatabaseProvider {
         .from('favoris_restaurant')
         .select()
         .eq('uuid', user.id)
+
+  static Future<Map<int, String>> getAllCuisines() async {
+    final response =
+        await supabase.from('style_cuisine').select('style_id, nom_style');
+    Map<int, String> res = {};
+    for (Map<String, dynamic> data in response) {
+      res[data['style_id']] = data['nom_style'];
+    }
+    return res;
+  }
+
+  static Future<Map<int, String>> getAllTypes() async {
+    final response =
+        await supabase.from('type_restaurant').select('type_id, nom_type');
+    Map<int, String> res = {};
+    for (Map<String, dynamic> data in response) {
+      res[data['type_id']] = data['nom_type'];
+    }
+    return res;
+  }
+
+  static Future<List<Restaurant>> searchRestaurants({
+    required List<String> cuisines,
+    required List<String> types,
+    required List<String> options,
+    String? textSearch,
+  }) async {
+    var query = supabase.from('restaurant').select(
+        "osm_id,longitude,latitude,type_restaurant(type_id, nom_type),nom_res,operator,brand,wheelchair,vegetarien,vegan,delivery,takeaway,capacity,drive_through,phone,website,facebook,region,departement,commune,possede(osm_id,style_id),style_cuisine(style_id,nom_style), horaires(osm_id,lundi,mardi,mercredi,jeudi,vendredi,samedi,dimanche)");
+
+    final List<Map<String, dynamic>> result = await query;
+    List<Restaurant> restaurants = [];
+
+    for (var resData in result) {
+      if (resData['type_restaurant'] == null) {
+        continue;
+      }
+
+      if (types.isNotEmpty) {
+        String? resType = resData['type_restaurant']['nom_type'];
+        if (resType == null || !types.contains(resType)) {
+          continue;
+        }
+      }
+
+      if (textSearch != null && textSearch.isNotEmpty) {
+        String? restaurantName = resData['nom_res']?.toString().toLowerCase();
+        if (restaurantName == null ||
+            !restaurantName.contains(textSearch.toLowerCase())) {
+          continue;
+        }
+      }
+
+      Restaurant restaurant = _mapToRestaurant(resData);
+
+      bool hasCuisine = cuisines.isEmpty;
+      if (!hasCuisine && restaurant.cuisine != null) {
+        for (String cuisine in restaurant.cuisine!) {
+          if (cuisines.contains(cuisine)) {
+            hasCuisine = true;
+            break;
+          }
+        }
+      }
+
+      bool hasOptions = true;
+      for (String optionLabel in options) {
+        String? optionBdName = FilterPanel.OPTIONS[optionLabel];
+        if (optionBdName == null) continue;
+
+        switch (optionBdName) {
+          case 'vegetarien':
+            if (restaurant.vegetarian != true) hasOptions = false;
+            break;
+          case 'vegan':
+            if (restaurant.vegan != true) hasOptions = false;
+            break;
+          case 'delivery':
+            if (restaurant.delivery != true) hasOptions = false;
+            break;
+          case 'takeaway':
+            if (restaurant.takeaway != true) hasOptions = false;
+            break;
+          case 'drive_through':
+            if (restaurant.driveThrough != true) hasOptions = false;
+            break;
+          case 'wheelchair':
+            if (restaurant.wheelchair != 'yes') hasOptions = false;
+            break;
+        }
+
+        if (!hasOptions) break;
+      }
+
+      if (hasCuisine && hasOptions) {
+        restaurants.add(restaurant);
+      }
+    }
+
+    return restaurants;
+  }
+
+  static Future<bool> isRestaurantFavori(int restaurantId) async {
+    final data = await supabase
+        .from('favoris_restaurant')
+        .select()
+        .eq('uuid', getUser()!.id)
         .eq('osm_id', restaurantId);
 
     return data.isNotEmpty;
   }
 
-  static Future<String?> removeFavoriRestaurant(int restaurantId) async {
+
+  static Future<List<Restaurant>> getFavorisRestaurants() async {
+    final data = await supabase
+        .from('favoris_restaurant')
+        .select('osm_id')
+        .eq('uuid', getUser()!.id);
+
+    List<Restaurant> favoris = [];
+    for (var item in data) {
+      Restaurant? restaurant = await getRestaurantById(item['osm_id']);
+      if (restaurant != null) {
+        favoris.add(restaurant);
+      }
+    }
+
+    return favoris;
+  }
+
+    static Future<String?> removeFavoriRestaurant(int restaurantId) async {
     final user = getUser();
     if (user == null) {
       return "Utilisateur non connecté";
@@ -373,11 +477,88 @@ class DatabaseProvider {
     await supabase
         .from('favoris_restaurant')
         .delete()
-        .eq('uuid', user.id)
+        .eq('uuid', getUser()!.id)
         .eq('osm_id', restaurantId)
         .onError((error, stackTrace) {
       err = error.toString();
     });
     return err;
+  }
+
+  static Future<(bool, String?)> toggleFavoriRestaurant(
+      int restaurantId) async {
+    bool isFavori = await isRestaurantFavori(restaurantId);
+    String? err;
+
+    if (isFavori) {
+      err = await removeFavoriRestaurant(restaurantId);
+      return (!err.toString().isEmpty, err);
+    } else {
+      err = await addFavoriRestaurant(restaurantId);
+      return (!err.toString().isEmpty, err);
+    }
+  }
+
+  static Future<String?> removeCuisineFavorite(String nomCuisine) async {
+    int? styleId = await getCuisineId(nomCuisine);
+    if (styleId == null) return "Style de cuisine non trouvé !";
+
+    String? err;
+    await supabase
+        .from('favoris_style')
+        .delete()
+        .eq('uuid', getUser()!.id)
+        .eq('style_id', styleId)
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+
+    return err;
+  }
+
+  static Future<bool> isCuisineFavorite(String nomCuisine) async {
+    int? styleId = await getCuisineId(nomCuisine);
+    if (styleId == null) return false;
+
+    final data = await supabase
+        .from('favoris_style')
+        .select()
+        .eq('uuid', getUser()!.id)
+        .eq('style_id', styleId);
+
+    return data.isNotEmpty;
+  }
+
+  static Future<List<String>> getFavorisCuisines() async {
+    final data = await supabase
+        .from('favoris_style')
+        .select('style_id')
+        .eq('uuid', getUser()!.id);
+
+    List<String> favoris = [];
+    for (var item in data) {
+      final styleData = await supabase
+          .from('style_cuisine')
+          .select('nom_style')
+          .eq('style_id', item['style_id'])
+          .single();
+
+      favoris.add(styleData['nom_style']);
+    }
+
+    return favoris;
+  }
+
+  static Future<(bool, String?)> toggleFavoriCuisine(String nomCuisine) async {
+    bool isFavori = await isCuisineFavorite(nomCuisine);
+    String? err;
+
+    if (isFavori) {
+      err = await removeCuisineFavorite(nomCuisine);
+      return (err.toString().isNotEmpty, err);
+    } else {
+      err = await addCuisineFavorite(nomCuisine);
+      return (err.toString().isNotEmpty, err);
+    }
   }
 }

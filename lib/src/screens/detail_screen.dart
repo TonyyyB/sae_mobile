@@ -9,8 +9,10 @@ import 'package:sae_mobile/models/restaurant.dart';
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/src/widgets/avis.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
+import '../../config/colors.dart';
 import '../data/database_provider.dart';
 import '../widgets/scaffold.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class DetailsScreen extends StatefulWidget {
   final int restaurantId;
@@ -60,11 +62,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                            restaurant.name,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                          child: SizedBox(
+                            width: 180.0,
+                            child : AutoSizeText(restaurant.name,
+                            maxLines: 2,
+                            minFontSize: 24,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                            color: PickMenuColors.textColor, fontSize: 24))),
                           ),
-                        ),
                         Align(
                             alignment: Alignment.centerRight,
                             child: NoteEtoile(
@@ -123,7 +129,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           _buildOpeningHours(restaurant),
           SizedBox(height: 8),
           // Options
-          Text("Option disponibles :",
+          Text("Options disponibles :",
               style: PickMenuTheme.detailTitleTextStyle()),
           _buildOptions(restaurant),
           SizedBox(height: 8),
@@ -152,7 +158,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     options.removeWhere((k, v) => v == null || v == false);
     if (options.isEmpty) {
       return Text(
-        "\t\tAucune option n'est disponnible",
+        "\t\tAucune option n'est disponible",
         style: PickMenuTheme.detailTextStyle(),
       );
     }
@@ -200,7 +206,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   Widget _buildOpeningHours(Restaurant restaurant) {
     if (restaurant.openingHours == null) {
-      return Text("Aucun horraire disponnible",
+      return Text("Aucun horaire disponible",
           style: PickMenuTheme.detailTextStyle());
     }
     return Column(

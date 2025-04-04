@@ -1,28 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/config/router.dart';
+import 'package:sae_mobile/src/widgets/favorie_widget.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../../config/colors.dart';
 import '../../models/restaurant.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant _restaurant;
+  final double? note;
 
-  const RestaurantCard({super.key, required Restaurant restau})
+  const RestaurantCard({super.key, required Restaurant restau, this.note})
       : this._restaurant = restau;
 
   @override
   Widget build(BuildContext context) {
     var typeCuisine = _restaurant.parseCuisine;
     typeCuisine ??= "Type de cuisine non spécifié";
-    var horaires = _restaurant.openingHours;
+    var horaires = _restaurant.parseOpeningHours;
+    horaires ??= "      Horaires indisponibles";
     return Card(
         elevation: 10,
         clipBehavior: Clip.antiAlias,
         margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
         child: GestureDetector(
           onTap: () {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Click')));
+            router.push("/detail/${_restaurant.osmId}");
           },
           child: Column(
             children: [
@@ -41,14 +45,18 @@ class RestaurantCard extends StatelessWidget {
                       children: [
                         Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(_restaurant.name,
+                            child: SizedBox(
+                                width: 180.0,
+                                child : AutoSizeText(_restaurant.name,
+                                maxLines: 1,
+                                minFontSize: 24,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: PickMenuColors.textColor,
-                                    fontSize: 24))),
+                                color: PickMenuColors.textColor, fontSize: 24)))),
                         Align(
                             alignment: Alignment.centerRight,
-                            child:
-                                NoteEtoile(rating: _restaurant.getGlobalRate))
+                            child: NoteEtoile(
+                                rating: this.note ?? _restaurant.getGlobalRate))
                       ]),
                 ),
               ),
@@ -80,6 +88,12 @@ class RestaurantCard extends StatelessWidget {
                                 style: TextStyle(
                                     color: PickMenuColors.inputHint,
                                     fontSize: 16)))),
+                    Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child:
+                                FavoriteWidget(idRestau: _restaurant.osmId))),
                   ])),
             ],
           ),

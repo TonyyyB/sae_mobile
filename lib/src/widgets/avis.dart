@@ -33,6 +33,7 @@ class AvisWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge);
         }
         return SizedBox(
+          width: 300,
           child: Column(
             children: [
               Row(
