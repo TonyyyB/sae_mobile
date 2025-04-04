@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sae_mobile/config/theme.dart';
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/models/restaurant.dart';

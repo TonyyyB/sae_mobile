@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/colors.dart';
@@ -11,9 +10,9 @@ const Icon star_empty = Icon(
     IconData(0xe5fa, fontFamily: 'MaterialIcons'));
 
 class EtoileButtons extends StatefulWidget {
-  EtoileButtons({super.key, note = 0, this.onNoteChange}) : _note = note;
   final Function(double newValue)? onNoteChange;
-  late double _note;
+  double _note;
+  EtoileButtons({super.key, this.onNoteChange, double note = 0}) : _note = note;
 
   @override
   State<EtoileButtons> createState() => EtoileButtonsState();

@@ -47,6 +47,7 @@ dependencies:
   flutter_map_cancellable_tile_provider:
   auto_size_text: ^3.0.0
 
+  latlong2: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

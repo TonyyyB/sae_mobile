@@ -221,7 +221,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   Widget _buildRestaurantMap(Restaurant restaurant) {
-    return Container(
+    return SizedBox(
       height: 500,
       child: FlutterMap(
         options: MapOptions(

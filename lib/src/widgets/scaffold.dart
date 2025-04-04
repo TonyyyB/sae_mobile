@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/config/router.dart';
-import 'package:sae_mobile/src/data/database_provider.dart';
 import 'appbar.dart';
 import 'filter_panel.dart';
 

@@ -496,10 +496,10 @@ class DatabaseProvider {
 
     if (isFavori) {
       err = await removeFavoriRestaurant(restaurantId);
-      return (!err.toString().isEmpty, err);
+      return (err.toString().isNotEmpty, err);
     } else {
       err = await addFavoriRestaurant(restaurantId);
-      return (!err.toString().isEmpty, err);
+      return (err.toString().isNotEmpty, err);
     }
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sae_mobile/src/widgets/scaffold.dart';
 import '../../config/colors.dart';
 
 const Icon star = Icon(
@@ -47,7 +46,7 @@ class NoteEtoile extends StatelessWidget {
   final Color iconColor;
   final double rating;
 
-  NoteEtoile(
+  const NoteEtoile(
       {super.key,
       this.size = 20,
       this.iconColor = PickMenuColors.iconsColor,

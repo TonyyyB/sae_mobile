@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/config/router.dart';
 import 'package:sae_mobile/src/widgets/favorie_widget.dart';
@@ -12,7 +11,7 @@ class RestaurantCard extends StatelessWidget {
   final double? note;
 
   const RestaurantCard({super.key, required Restaurant restau, this.note})
-      : this._restaurant = restau;
+      : _restaurant = restau;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,7 @@ class RestaurantCard extends StatelessWidget {
                               alignment: Alignment.centerRight,
                               child: NoteEtoile(
                                   rating:
-                                      this.note ?? _restaurant.getGlobalRate))
+                                      note ?? _restaurant.getGlobalRate))
                         ]),
                   ),
                 ),

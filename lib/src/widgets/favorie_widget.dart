@@ -5,7 +5,7 @@ import '../../config/colors.dart';
 
 class FavoriteWidget extends StatefulWidget {
   final int idRestau;
-  FavoriteWidget({super.key, required this.idRestau});
+  const FavoriteWidget({super.key, required this.idRestau});
 
   @override
   State<FavoriteWidget> createState() => _FavoriteWidgetState();
