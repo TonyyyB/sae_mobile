@@ -12,26 +12,26 @@ class HomeScreen extends StatelessWidget {
     return FutureBuilder<(List<Restaurant>, List<double?>)>(
       future: DatabaseProvider.getTop5(),
       builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Text('Loading...');
-          default:
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            List<Restaurant> restaus = snapshot.data!.$1;
-            List<double?> notes = snapshot.data!.$2;
-            return PickMenuScaffold(
-                child: ListView.builder(
-              itemCount: restaus.length,
-              itemBuilder: (context, index) {
-                return RestaurantCard(
-                  restau: restaus[index],
-                  note: notes[index],
-                );
-              },
-            ));
+        Widget child = const Center(
+          child: CircularProgressIndicator(),
+        );
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
         }
+        if (snapshot.hasData) {
+          List<Restaurant> restaus = snapshot.data!.$1;
+          List<double?> notes = snapshot.data!.$2;
+          child = ListView.builder(
+            itemCount: restaus.length,
+            itemBuilder: (context, index) {
+              return RestaurantCard(
+                restau: restaus[index],
+                note: notes[index],
+              );
+            },
+          );
+        }
+        return PickMenuScaffold(child: child);
       },
     );
   }

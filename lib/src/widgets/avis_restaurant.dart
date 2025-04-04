@@ -17,7 +17,7 @@ class AvisRestaurant extends StatefulWidget {
 
 class _AvisRestaurantState extends State<AvisRestaurant> {
   bool _isSubmitting = false;
-  int _note = 5;
+  int _note = 3;
   final TextEditingController _commentaireController = TextEditingController();
   void sendAvis() async {
     final commentaire = _commentaireController.text.trim();
@@ -38,7 +38,7 @@ class _AvisRestaurantState extends State<AvisRestaurant> {
       } else {
         widget.restaurant.addAvis(avis);
         _commentaireController.text = "";
-        _note = 5;
+        _note = 3;
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -60,18 +60,18 @@ class _AvisRestaurantState extends State<AvisRestaurant> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.topLeft,
                     child: Text(
                       widget.restaurant.name,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
                   Align(
-                      alignment: Alignment.centerRight,
+                      alignment: Alignment.bottomLeft,
                       child: NoteEtoile(
                           rating: widget.restaurant.avis == null
                               ? 0

@@ -57,22 +57,23 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Align(
-                          alignment: Alignment.centerLeft,
+                          alignment: Alignment.topLeft,
                           child: SizedBox(
-                            width: 180.0,
-                            child : AutoSizeText(restaurant.name,
-                            maxLines: 2,
-                            minFontSize: 24,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                            color: PickMenuColors.textColor, fontSize: 24))),
-                          ),
+                              width: 180.0,
+                              child: AutoSizeText(restaurant.name,
+                                  maxLines: 2,
+                                  minFontSize: 24,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: PickMenuColors.textColor,
+                                      fontSize: 24))),
+                        ),
                         Align(
-                            alignment: Alignment.centerRight,
+                            alignment: Alignment.bottomLeft,
                             child: NoteEtoile(
                                 rating: restaurant.avis == null
                                     ? 0

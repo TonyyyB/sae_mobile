@@ -16,7 +16,7 @@ class RestaurantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var typeCuisine = _restaurant.parseCuisine;
-    typeCuisine ??= "Type de cuisine non spécifié";
+    typeCuisine ??= "Non spécifié";
     var horaires = _restaurant.parseOpeningHours;
     horaires ??= "      Horaires indisponibles";
     return MouseRegion(

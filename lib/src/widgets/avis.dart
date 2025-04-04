@@ -35,15 +35,15 @@ class AvisWidget extends StatelessWidget {
           width: 300,
           child: Column(
             children: [
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.topLeft,
                     child: nameWidget,
                   ),
                   Align(
-                      alignment: Alignment.centerRight,
+                      alignment: Alignment.bottomLeft,
                       child: NoteEtoile(rating: avis.note as double)),
                 ],
               ),
