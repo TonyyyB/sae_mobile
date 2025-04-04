@@ -12,17 +12,19 @@ class FilterPanel extends StatefulWidget {
   };
   final Function(List<String> selectedCuisines, List<String> selectedTypes,
       List<String> selectedOptions) onApplyFilters;
-  final List<String> selectedCuisines;
-  final List<String> selectedTypes;
-  final List<String> selectedOptions;
+  final List<String> initialSelectedCuisines;
+  final List<String> initialSelectedTypes;
+  final List<String> initialSelectedOptions;
 
-  const FilterPanel({
+  FilterPanel({
     required this.onApplyFilters,
-    this.selectedCuisines = const [],
-    this.selectedTypes = const [],
-    this.selectedOptions = const [],
+    List<String>? selectedCuisines,
+    List<String>? selectedTypes,
+    List<String>? selectedOptions,
     super.key,
-  });
+  })  : initialSelectedCuisines = selectedCuisines ?? [],
+        initialSelectedTypes = selectedTypes ?? [],
+        initialSelectedOptions = selectedOptions ?? [];
 
   @override
   _FilterPanelState createState() => _FilterPanelState();
@@ -34,9 +36,19 @@ class _FilterPanelState extends State<FilterPanel> {
   late List<String> types = [];
   final List<String> options = FilterPanel.OPTIONS.keys.toList();
 
+  // Copies locales modifiables
+  late List<String> _selectedCuisines;
+  late List<String> _selectedTypes;
+  late List<String> _selectedOptions;
+
   @override
   void initState() {
     super.initState();
+    // Créer des copies modifiables des listes initiales
+    _selectedCuisines = List<String>.from(widget.initialSelectedCuisines);
+    _selectedTypes = List<String>.from(widget.initialSelectedTypes);
+    _selectedOptions = List<String>.from(widget.initialSelectedOptions);
+
     _initData().then(
       (value) {
         setState(() {
@@ -65,14 +77,13 @@ class _FilterPanelState extends State<FilterPanel> {
               )
             ] else ...[
               _buildCheckboxList(
-                  'Type de Cuisine', cuisines, widget.selectedCuisines),
-              _buildCheckboxList(
-                  'Type de Restaurant', types, widget.selectedTypes),
-              _buildCheckboxList('Options', options, widget.selectedOptions),
+                  'Type de Cuisine', cuisines, _selectedCuisines),
+              _buildCheckboxList('Type de Restaurant', types, _selectedTypes),
+              _buildCheckboxList('Options', options, _selectedOptions),
               ElevatedButton(
                 onPressed: () {
-                  widget.onApplyFilters(widget.selectedCuisines,
-                      widget.selectedTypes, widget.selectedOptions);
+                  widget.onApplyFilters(
+                      _selectedCuisines, _selectedTypes, _selectedOptions);
                 },
                 child: Text('Rechercher'),
               ),

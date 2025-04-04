@@ -9,26 +9,29 @@ class PickMenuScaffold extends StatefulWidget {
   final List<String> selectedCuisines;
   final List<String> selectedTypes;
   final List<String> selectedOptions;
+  final String initialSearch;
 
   const PickMenuScaffold(
       {required this.child,
       this.selectedCuisines = const [],
       this.selectedTypes = const [],
       this.selectedOptions = const [],
-      super.key});
+      super.key,
+      this.initialSearch = ""});
 
   @override
   _PickMenuScaffoldState createState() => _PickMenuScaffoldState();
 }
 
 class _PickMenuScaffoldState extends State<PickMenuScaffold> {
-  TextEditingController searchController = TextEditingController();
+  late TextEditingController searchController;
   FocusNode searchFocusNode = FocusNode();
   bool showFilters = false;
 
   @override
   void initState() {
     super.initState();
+    searchController = TextEditingController(text: widget.initialSearch);
     searchFocusNode.addListener(() {
       if (searchFocusNode.hasFocus) {
         setState(() {
@@ -52,8 +55,12 @@ class _PickMenuScaffoldState extends State<PickMenuScaffold> {
     setState(() {
       showFilters = false;
     });
-    router.push("/search",
-        extra: {"cuisines": cuisines, "types": types, "options": options});
+    router.push("/search", extra: {
+      "cuisines": cuisines,
+      "types": types,
+      "options": options,
+      "search": searchController.text
+    });
   }
 
   void closeFiltersIfNeeded() {
@@ -78,22 +85,20 @@ class _PickMenuScaffoldState extends State<PickMenuScaffold> {
         showFilters: showFilters,
       ),
       body: GestureDetector(
-        onTap:
-            closeFiltersIfNeeded, // Fermer les filtres si on clique en dehors
+        onTap: closeFiltersIfNeeded,
         behavior: HitTestBehavior.opaque,
         child: Column(
           children: [
             if (showFilters)
               GestureDetector(
-                onTap:
-                    () {}, // Empêche la fermeture en cliquant sur les filtres
+                onTap: () {},
                 child: FilterPanel(
                     selectedCuisines: widget.selectedCuisines,
                     selectedTypes: widget.selectedTypes,
                     selectedOptions: widget.selectedOptions,
                     onApplyFilters: applyFilters),
               ),
-            Expanded(child: widget.child), // Contenu principal
+            Expanded(child: widget.child),
           ],
         ),
       ),

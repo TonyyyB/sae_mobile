@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/config/colors.dart';
 import 'package:sae_mobile/config/images.dart';
+import 'package:sae_mobile/config/router.dart';
 
 class PickMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextEditingController searchController;
@@ -8,6 +9,7 @@ class PickMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onFilterTap;
   final ValueChanged<String> onSearchChanged;
   final bool showFilters;
+  final String initialSearch;
 
   const PickMenuAppBar({
     required this.searchController,
@@ -15,6 +17,7 @@ class PickMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.onFilterTap,
     required this.onSearchChanged,
     required this.showFilters,
+    this.initialSearch = "",
     super.key,
   });
 
@@ -32,10 +35,18 @@ class PickMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               spacing: 20.5,
               children: [
-                Image(
-                  image: PickMenuImages.logo,
-                  height: 42,
-                  width: 92,
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    child: Image(
+                      image: PickMenuImages.logo,
+                      height: 42,
+                      width: 92,
+                    ),
+                    onTap: () {
+                      router.go("/home");
+                    },
+                  ),
                 ),
                 Expanded(
                   child: TextField(
