@@ -21,7 +21,7 @@ class DatabaseProvider {
     }
   }
 
-  Future<String?> signUp(
+  static Future<String?> signUp(
       {required String nom,
       required String prenom,
       required String email,
@@ -229,9 +229,16 @@ class DatabaseProvider {
     return avisList;
   }
 
-// TODO
-  static Future<String?> postAvisRestaurant(Avis avis, File photo) async {
-    return "UNIMPLEMENTED";
+// TODO la photo ne fonctionne pas
+  static Future<String?> postAvisRestaurant(Avis avis, File? photo) async {
+    String? err;
+    await supabase
+        .from('commentaire')
+        .insert(avis.insert())
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+    return err;
   }
 
   static Future<double?> getRestaurantNoteById(int osmId) async {

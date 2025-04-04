@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/config/router.dart';
 import 'package:sae_mobile/src/widgets/favorie_widget.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../../config/colors.dart';
@@ -23,8 +24,7 @@ class RestaurantCard extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
         child: GestureDetector(
           onTap: () {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Click')));
+            router.push("/detail/${_restaurant.osmId}");
           },
           child: Column(
             children: [

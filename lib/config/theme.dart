@@ -60,7 +60,7 @@ class PickMenuTheme {
         fontFamily: 'LXGWWenKaiMonoTC',
         color: PickMenuColors.detailTextColor);
   }
-
+  
   static TextStyle elevatedButtonTextStyle() {
     return TextStyle(
         fontSize: 28.0,
@@ -87,6 +87,17 @@ class PickMenuTheme {
         fontFamily: 'LXGWWenKaiMonoTC',
         decoration: TextDecoration.underline,
         color: PickMenuColors.spanLinkColor);
+  }
+
+  static TextStyle importantTextStyle() {
+    return TextStyle(
+        fontSize: 16.0,
+        height: 24.0 / 16.0,
+        letterSpacing: 0.5,
+        fontFamily: 'LXGWWenKaiMonoTC',
+        fontWeight: FontWeight.bold,
+        decoration: TextDecoration.underline,
+        color: PickMenuColors.spanTextColor);
   }
 
   static ThemeData defaultTheme() {

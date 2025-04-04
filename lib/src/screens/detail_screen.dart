@@ -152,7 +152,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     options.removeWhere((k, v) => v == null || v == false);
     if (options.isEmpty) {
       return Text(
-        "\t\tAucune option n'est disponnible",
+        "\t\tAucune option n'est disponible",
         style: PickMenuTheme.detailTextStyle(),
       );
     }
@@ -200,7 +200,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   Widget _buildOpeningHours(Restaurant restaurant) {
     if (restaurant.openingHours == null) {
-      return Text("Aucun horraire disponnible",
+      return Text("Aucun horaire disponible",
           style: PickMenuTheme.detailTextStyle());
     }
     return Column(
