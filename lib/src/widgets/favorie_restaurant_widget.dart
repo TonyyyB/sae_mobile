@@ -3,15 +3,16 @@ import 'package:sae_mobile/src/data/database_provider.dart';
 
 import '../../config/colors.dart';
 
-class FavoriteWidget extends StatefulWidget {
+class FavoriteRestaurantWidget extends StatefulWidget {
   final int idRestau;
-  const FavoriteWidget({super.key, required this.idRestau});
+  const FavoriteRestaurantWidget({super.key, required this.idRestau});
 
   @override
-  State<FavoriteWidget> createState() => _FavoriteWidgetState();
+  State<FavoriteRestaurantWidget> createState() =>
+      _FavoriteRestaurantWidgetState();
 }
 
-class _FavoriteWidgetState extends State<FavoriteWidget> {
+class _FavoriteRestaurantWidgetState extends State<FavoriteRestaurantWidget> {
   bool _isFavorited = false;
   bool _isLoading = true;
 

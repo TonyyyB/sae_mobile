@@ -348,10 +348,21 @@ class _UserScreenState extends State<UserScreen> {
                           const SizedBox(height: 10),
                           ElevatedButton.icon(
                             onPressed: () {
-                              router.go("/favoris");
+                              router.push("/favoris/restaurants");
                             },
                             icon: const Icon(Icons.favorite),
-                            label: const Text("Voir mes favoris"),
+                            label: const Text("Restaurants favoris"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              router.push("/favoris/cuisines");
+                            },
+                            icon: const Icon(Icons.favorite),
+                            label: const Text("Cuisines favorites"),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.redAccent,
                             ),

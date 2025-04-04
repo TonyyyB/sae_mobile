@@ -8,6 +8,7 @@ import 'package:sae_mobile/config/theme.dart';
 import 'package:sae_mobile/models/restaurant.dart';
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/src/widgets/avis.dart';
+import 'package:sae_mobile/src/widgets/favorite_cuisine_widget.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../../config/colors.dart';
 import '../data/database_provider.dart';
@@ -116,13 +117,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           // Type de cuisine
           Text("Types de cuisine :",
               style: PickMenuTheme.detailTitleTextStyle()),
-          Text(
-              restaurant.cuisine == null
-                  ? '\t\tNon renseigné'
-                  : restaurant.cuisine!.isEmpty
-                      ? '\t\tNon renseigné'
-                      : '\t\t${restaurant.cuisine?.join(", ")}',
-              style: PickMenuTheme.detailTextStyle()),
+          _buildCuisines(restaurant),
           SizedBox(height: 8),
           // Horaires d'ouverture
           Text("Horaires d'ouverture :",
@@ -144,6 +139,28 @@ class _DetailsScreenState extends State<DetailsScreen> {
           SizedBox(height: 8)
         ],
       ),
+    );
+  }
+
+  Widget _buildCuisines(Restaurant restaurant) {
+    if (restaurant.cuisine == null || restaurant.cuisine!.isEmpty) {
+      return Text(
+        "\t\tAucune cuisine n'est disponible",
+        style: PickMenuTheme.detailTextStyle(),
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: restaurant.cuisine!
+          .map((e) => Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  Text('\t\t- $e', style: PickMenuTheme.detailTextStyle()),
+                  FavoriteCuisineWidget(nomStyle: e)
+                ],
+              )))
+          .toList(),
     );
   }
 
