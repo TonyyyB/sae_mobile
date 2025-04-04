@@ -41,11 +41,11 @@ class RestaurantCard extends StatelessWidget {
                   margin: EdgeInsets.fromLTRB(40, 20, 40, 20),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                    child: Row(
+                    child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Align(
-                              alignment: Alignment.centerLeft,
+                              alignment: Alignment.topLeft,
                               child: SizedBox(
                                   width: 180.0,
                                   child: AutoSizeText(_restaurant.name,
@@ -56,10 +56,9 @@ class RestaurantCard extends StatelessWidget {
                                           color: PickMenuColors.textColor,
                                           fontSize: 24)))),
                           Align(
-                              alignment: Alignment.centerRight,
+                              alignment: Alignment.bottomLeft,
                               child: NoteEtoile(
-                                  rating:
-                                      note ?? _restaurant.getGlobalRate))
+                                  rating: note ?? _restaurant.getGlobalRate))
                         ]),
                   ),
                 ),
