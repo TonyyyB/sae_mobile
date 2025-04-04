@@ -4,6 +4,8 @@ import 'package:sae_mobile/src/data/database_provider.dart';
 import '../../config/colors.dart';
 
 class FavoriteWidget extends StatefulWidget {
+
+
   final int idRestau;
   FavoriteWidget({super.key, required this.idRestau});
 
@@ -13,6 +15,8 @@ class FavoriteWidget extends StatefulWidget {
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   bool _isFavorited = false;
+  bool _isLoading = true;
+  int _idRestau;
 
   @override
   void initState() {
@@ -30,8 +34,29 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
     return await DatabaseProvider.isRestaurantFavori(widget.idRestau);
   }
 
-  void _toggleFavorite() {
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFavoriteStatus();
+  }
+
+  Future<void> _checkFavoriteStatus() async {
+    final isFavorite = await DatabaseProvider.isRestaurantFavorite(_idRestau);
+
+    if (mounted) {
+      setState(() {
+        _isFavorited = isFavorite;
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _toggleFavorite() async {
     setState(() {
+
+      _isLoading = true;
+
       if (_isFavorited) {
         _isFavorited = false;
         DatabaseProvider.removeFavoriRestaurant(widget.idRestau);
@@ -39,7 +64,34 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
         _isFavorited = true;
         DatabaseProvider.addFavoriRestaurant(widget.idRestau);
       }
+
     });
+
+    String? error;
+    if (_isFavorited) {
+      error = await DatabaseProvider.removeFavoriRestaurant(this._idRestau);
+    } else {
+      error = await DatabaseProvider.addFavoriRestaurant(this._idRestau);
+    }
+
+    if (error != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erreur: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else if (mounted) {
+      setState(() {
+        _isFavorited = !_isFavorited;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -49,7 +101,16 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
       children: [
         Container(
           padding: const EdgeInsets.all(0),
-          child: IconButton(
+          child: _isLoading
+              ? const SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: PickMenuColors.textFieldErrorBorder,
+            ),
+          )
+              : IconButton(
             padding: const EdgeInsets.all(0),
             alignment: Alignment.center,
             icon: (_isFavorited
@@ -59,8 +120,8 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
             onPressed: _toggleFavorite,
           ),
         ),
-        SizedBox(
-            width: 18,
+        const SizedBox(
+          width: 18,
         ),
       ],
     );

@@ -3,6 +3,8 @@ import 'package:sae_mobile/config/colors.dart';
 import 'package:sae_mobile/config/images.dart';
 import 'package:sae_mobile/config/router.dart';
 
+import '../../config/router.dart';
+
 class PickMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
@@ -66,7 +68,9 @@ class PickMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: PickMenuColors.iconsColor,
                     size: 40,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    router.push('/profil');
+                  },
                   padding: EdgeInsets.all(0),
                 ),
               ],
