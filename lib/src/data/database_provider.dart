@@ -270,13 +270,13 @@ class DatabaseProvider {
     await supabase
         .from("utilisateur")
         .update({
-      "nom_utilisateur": nom,
-      "prenom_utilisateur": prenom,
-    })
+          "nom_utilisateur": nom,
+          "prenom_utilisateur": prenom,
+        })
         .eq("uuid", user.id)
         .onError((error, stackTrace) {
-      err = error.toString();
-    });
+          err = error.toString();
+        });
 
     if (err != null) {
       return err;
@@ -313,7 +313,8 @@ class DatabaseProvider {
     }
 
     // Extraire les IDs des restaurants
-    List<int> restaurantIds = favorisData.map<int>((item) => item['osm_id'] as int).toList();
+    List<int> restaurantIds =
+        favorisData.map<int>((item) => item['osm_id'] as int).toList();
 
     // Récupérer les détails de chaque restaurant favori
     List<Restaurant> favoriteRestaurants = [];
@@ -336,7 +337,11 @@ class DatabaseProvider {
     final data = await supabase
         .from('favoris_restaurant')
         .select()
-        .eq('uuid', user.id)
+        .eq('uuid', getUser()!.id)
+        .eq('osm_id', restaurantId);
+
+    return data.isNotEmpty;
+  }
 
   static Future<Map<int, String>> getAllCuisines() async {
     final response =
@@ -449,7 +454,6 @@ class DatabaseProvider {
     return data.isNotEmpty;
   }
 
-
   static Future<List<Restaurant>> getFavorisRestaurants() async {
     final data = await supabase
         .from('favoris_restaurant')
@@ -467,7 +471,7 @@ class DatabaseProvider {
     return favoris;
   }
 
-    static Future<String?> removeFavoriRestaurant(int restaurantId) async {
+  static Future<String?> removeFavoriRestaurant(int restaurantId) async {
     final user = getUser();
     if (user == null) {
       return "Utilisateur non connecté";

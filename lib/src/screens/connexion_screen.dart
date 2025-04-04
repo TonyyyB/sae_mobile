@@ -91,7 +91,7 @@ class _ConnexionScreenState extends State<ConnexionScreen> {
       });
 
       if (success == null) {
-        router.push('/home');
+        router.go('/home');
       } else {
         setState(() {
           _emailError = "Email ou mot de passe incorrect";
