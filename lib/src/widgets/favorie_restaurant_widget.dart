@@ -48,22 +48,15 @@ class _FavoriteRestaurantWidgetState extends State<FavoriteRestaurantWidget> {
   }
 
   void _toggleFavorite() async {
+    String? error;
     setState(() {
       _isLoading = true;
-
-      if (_isFavorited) {
-        _isFavorited = false;
-        DatabaseProvider.removeFavoriRestaurant(widget.idRestau);
-      } else {
-        _isFavorited = true;
-        DatabaseProvider.addFavoriRestaurant(widget.idRestau);
-      }
     });
-
-    String? error;
     if (_isFavorited) {
+      _isFavorited = false;
       error = await DatabaseProvider.removeFavoriRestaurant(widget.idRestau);
     } else {
+      _isFavorited = true;
       error = await DatabaseProvider.addFavoriRestaurant(widget.idRestau);
     }
 
@@ -74,16 +67,10 @@ class _FavoriteRestaurantWidgetState extends State<FavoriteRestaurantWidget> {
           backgroundColor: Colors.red,
         ),
       );
-    } else if (mounted) {
-      setState(() {
-        _isFavorited = !_isFavorited;
-      });
     }
 
     if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+      _checkFavoriteStatus();
     }
   }
 
