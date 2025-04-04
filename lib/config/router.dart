@@ -5,6 +5,7 @@ import 'package:sae_mobile/src/screens/connexion_screen.dart';
 import 'package:sae_mobile/src/screens/detail_screen.dart';
 import 'package:sae_mobile/src/screens/home_screen.dart';
 import 'package:sae_mobile/src/screens/inscription_screen.dart';
+import 'package:sae_mobile/src/screens/search_screen.dart';
 
 final GoRouter router = GoRouter(
     redirect: (context, state) {
@@ -33,6 +34,18 @@ final GoRouter router = GoRouter(
       GoRoute(
         path: '/home',
         builder: (context, state) => HomeScreen(),
+      ),
+      GoRoute(
+        path: "/search",
+        builder: (context, state) {
+          final args = state.extra! as Map<String, dynamic>;
+          return SearchScreen(
+            cuisines: args['cuisines']!,
+            types: args['types']!,
+            options: args['options']!,
+            search: args['search']!,
+          );
+        },
       ),
       GoRoute(
           path: '/detail/:id',
