@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sae_mobile/config/router.dart';
-import 'package:sae_mobile/src/widgets/favorie_widget.dart';
+import 'package:sae_mobile/src/widgets/favorie_restaurant_widget.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../../config/colors.dart';
 import '../../models/restaurant.dart';
@@ -94,8 +94,8 @@ class RestaurantCard extends StatelessWidget {
                           alignment: Alignment.bottomRight,
                           child: Padding(
                               padding: EdgeInsets.all(16),
-                              child:
-                                  FavoriteWidget(idRestau: _restaurant.osmId))),
+                              child: FavoriteRestaurantWidget(
+                                  idRestau: _restaurant.osmId))),
                     ])),
               ],
             )),

@@ -41,6 +41,13 @@ class _FilterPanelState extends State<FilterPanel> {
   late List<String> _selectedTypes;
   late List<String> _selectedOptions;
 
+  // Contrôleurs d'expansion
+  final List<ExpansionTileController> _controllers = [
+    ExpansionTileController(),
+    ExpansionTileController(),
+    ExpansionTileController(),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -63,43 +70,56 @@ class _FilterPanelState extends State<FilterPanel> {
     types = (await DatabaseProvider.getAllTypes()).values.toList();
   }
 
+  void _collapseAllExcept(int exceptIndex) {
+    for (int i = 0; i < _controllers.length; i++) {
+      if (i != exceptIndex) {
+        _controllers[i].collapse();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            if (_isLoading) ...[
-              const Center(
-                child: CircularProgressIndicator(),
-              )
-            ] else ...[
-              _buildCheckboxList(
-                  'Type de Cuisine', cuisines, _selectedCuisines),
-              _buildCheckboxList('Type de Restaurant', types, _selectedTypes),
-              _buildCheckboxList('Options', options, _selectedOptions),
-              ElevatedButton(
-                onPressed: () {
-                  widget.onApplyFilters(
-                      _selectedCuisines, _selectedTypes, _selectedOptions);
-                },
-                child: Text('Rechercher'),
-              ),
-            ]
-          ],
-        ),
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.all(10),
+      child: Column(
+        children: [
+          if (_isLoading) ...[
+            const Center(
+              child: CircularProgressIndicator(),
+            )
+          ] else ...[
+            _buildCheckboxList(
+                'Type de Cuisine', cuisines, _selectedCuisines, 0),
+            _buildCheckboxList('Type de Restaurant', types, _selectedTypes, 1),
+            _buildCheckboxList('Options', options, _selectedOptions, 2),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                widget.onApplyFilters(
+                    _selectedCuisines, _selectedTypes, _selectedOptions);
+              },
+              child: Text('Rechercher'),
+            ),
+          ]
+        ],
       ),
     );
   }
 
   Widget _buildCheckboxList(
-      String title, List<String> items, List<String> selectedList) {
+      String title, List<String> items, List<String> selectedList, int index) {
     return Material(
       child: ExpansionTile(
+        controller: _controllers[index],
         title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
         expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+        onExpansionChanged: (isExpanded) {
+          if (isExpanded) {
+            _collapseAllExcept(index);
+          }
+        },
         children: [
           LayoutBuilder(
             builder: (context, constraints) {

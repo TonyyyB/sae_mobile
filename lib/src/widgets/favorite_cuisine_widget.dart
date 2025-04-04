@@ -3,15 +3,15 @@ import 'package:sae_mobile/src/data/database_provider.dart';
 
 import '../../config/colors.dart';
 
-class FavoriteWidget extends StatefulWidget {
-  final int idRestau;
-  const FavoriteWidget({super.key, required this.idRestau});
+class FavoriteCuisineWidget extends StatefulWidget {
+  final String nomStyle;
+  const FavoriteCuisineWidget({super.key, required this.nomStyle});
 
   @override
-  State<FavoriteWidget> createState() => _FavoriteWidgetState();
+  State<FavoriteCuisineWidget> createState() => _FavoriteCuisineWidgetState();
 }
 
-class _FavoriteWidgetState extends State<FavoriteWidget> {
+class _FavoriteCuisineWidgetState extends State<FavoriteCuisineWidget> {
   bool _isFavorited = false;
   bool _isLoading = true;
 
@@ -32,7 +32,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
 
   Future<void> _checkFavoriteStatus() async {
     final isFavorite =
-        await DatabaseProvider.isRestaurantFavorite(widget.idRestau);
+        await DatabaseProvider.isCuisineFavorite(widget.nomStyle);
 
     if (mounted) {
       setState(() {
@@ -43,27 +43,20 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   }
 
   Future<bool> loadData() async {
-    return await DatabaseProvider.isRestaurantFavori(widget.idRestau);
+    return await DatabaseProvider.isCuisineFavorite(widget.nomStyle);
   }
 
   void _toggleFavorite() async {
+    String? error;
     setState(() {
       _isLoading = true;
-
-      if (_isFavorited) {
-        _isFavorited = false;
-        DatabaseProvider.removeFavoriRestaurant(widget.idRestau);
-      } else {
-        _isFavorited = true;
-        DatabaseProvider.addFavoriRestaurant(widget.idRestau);
-      }
     });
-
-    String? error;
     if (_isFavorited) {
-      error = await DatabaseProvider.removeFavoriRestaurant(widget.idRestau);
+      _isFavorited = false;
+      error = await DatabaseProvider.removeCuisineFavorite(widget.nomStyle);
     } else {
-      error = await DatabaseProvider.addFavoriRestaurant(widget.idRestau);
+      _isFavorited = true;
+      error = await DatabaseProvider.addCuisineFavorite(widget.nomStyle);
     }
 
     if (error != null && mounted) {
@@ -73,16 +66,10 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           backgroundColor: Colors.red,
         ),
       );
-    } else if (mounted) {
-      setState(() {
-        _isFavorited = !_isFavorited;
-      });
     }
 
     if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+      _checkFavoriteStatus();
     }
   }
 
