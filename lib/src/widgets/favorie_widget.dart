@@ -1,24 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:sae_mobile/src/data/database_provider.dart';
 
 import '../../config/colors.dart';
 
 class FavoriteWidget extends StatefulWidget {
-  const FavoriteWidget({super.key});
+  final int idRestau;
+  FavoriteWidget({super.key, required this.idRestau});
 
   @override
-  State<FavoriteWidget> createState() => _FavoriteWidgetState();
-}
+  State<FavoriteWidget> createState()=>_FavoriteWidgetState();
+  }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool _isFavorited = true;
+  bool _isFavorited = false;
 
+  @override
+  void initState() {
+    super.initState();
+    loadData().then((value) {
+      if(value) {
+        setState(() {
+          _isFavorited = true;
+        });
+      }
+    },);
+  }
+
+  Future<bool> loadData() async{
+    return await DatabaseProvider.isRestaurantFavori(widget.idRestau);
+  }
 
   void _toggleFavorite() {
     setState(() {
       if (_isFavorited) {
         _isFavorited = false;
+        DatabaseProvider.removeFavoriRestaurant(widget.idRestau);
       } else {
         _isFavorited = true;
+        DatabaseProvider.addFavoriRestaurant(widget.idRestau);
       }
     });
   }

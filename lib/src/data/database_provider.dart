@@ -22,7 +22,7 @@ class DatabaseProvider {
     }
   }
 
-  Future<String?> signUp(
+  static Future<String?> signUp(
       {required String nom,
       required String prenom,
       required String email,
@@ -189,9 +189,16 @@ class DatabaseProvider {
     return avisList;
   }
 
-// TODO
-  static Future<String?> postAvisRestaurant(Avis avis, File photo) async {
-    return "UNIMPLEMENTED";
+// TODO la photo ne fonctionne pas
+  static Future<String?> postAvisRestaurant(Avis avis, File? photo) async {
+    String? err;
+    await supabase
+        .from('commentaire')
+        .insert(avis.insert())
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+    return err;
   }
 
   static Future<double?> getRestaurantNoteById(int osmId) async {
@@ -243,6 +250,7 @@ class DatabaseProvider {
     });
     return err;
   }
+
 
   static Future<Map<int, String>> getAllCuisines() async {
     final response =
@@ -344,4 +352,128 @@ class DatabaseProvider {
 
     return restaurants;
   }
+
+  static Future<bool> isRestaurantFavori(int restaurantId) async {
+    final data = await supabase
+        .from('favoris_restaurant')
+        .select()
+        .eq('uuid', getUser()!.id)
+        .eq('osm_id', restaurantId);
+
+    return data.isNotEmpty;
+  }
+
+
+  static Future<List<Restaurant>> getFavorisRestaurants() async {
+    final data = await supabase
+        .from('favoris_restaurant')
+        .select('osm_id')
+        .eq('uuid', getUser()!.id);
+
+    List<Restaurant> favoris = [];
+    for (var item in data) {
+      Restaurant? restaurant = await getRestaurantById(item['osm_id']);
+      if (restaurant != null) {
+        favoris.add(restaurant);
+      }
+    }
+
+    return favoris;
+  }
+
+
+  static Future<String?> removeFavoriRestaurant(int restaurantId) async {
+    String? err;
+    await supabase
+        .from('favoris_restaurant')
+        .delete()
+        .eq('uuid', getUser()!.id)
+        .eq('osm_id', restaurantId)
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+
+    return err;
+  }
+
+
+  static Future<(bool, String?)> toggleFavoriRestaurant(int restaurantId) async {
+    bool isFavori = await isRestaurantFavori(restaurantId);
+    String? err;
+
+    if (isFavori) {
+      err = await removeFavoriRestaurant(restaurantId);
+      return (!err.toString().isEmpty, err);
+    } else {
+      err = await addFavoriRestaurant(restaurantId);
+      return (!err.toString().isEmpty, err);
+    }
+  }
+
+
+  static Future<String?> removeCuisineFavorite(String nomCuisine) async {
+    int? styleId = await getCuisineId(nomCuisine);
+    if (styleId == null) return "Style de cuisine non trouvé !";
+
+    String? err;
+    await supabase
+        .from('favoris_style')
+        .delete()
+        .eq('uuid', getUser()!.id)
+        .eq('style_id', styleId)
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+
+    return err;
+  }
+
+
+  static Future<bool> isCuisineFavorite(String nomCuisine) async {
+    int? styleId = await getCuisineId(nomCuisine);
+    if (styleId == null) return false;
+
+    final data = await supabase
+        .from('favoris_style')
+        .select()
+        .eq('uuid', getUser()!.id)
+        .eq('style_id', styleId);
+
+    return data.isNotEmpty;
+  }
+
+
+  static Future<List<String>> getFavorisCuisines() async {
+    final data = await supabase
+        .from('favoris_style')
+        .select('style_id')
+        .eq('uuid', getUser()!.id);
+
+    List<String> favoris = [];
+    for (var item in data) {
+      final styleData = await supabase
+          .from('style_cuisine')
+          .select('nom_style')
+          .eq('style_id', item['style_id'])
+          .single();
+
+      favoris.add(styleData['nom_style']);
+    }
+
+    return favoris;
+  }
+
+  static Future<(bool, String?)> toggleFavoriCuisine(String nomCuisine) async {
+    bool isFavori = await isCuisineFavorite(nomCuisine);
+    String? err;
+
+    if (isFavori) {
+      err = await removeCuisineFavorite(nomCuisine);
+      return (!err.toString().isEmpty, err);
+    } else {
+      err = await addCuisineFavorite(nomCuisine);
+      return (!err.toString().isEmpty, err);
+    }
+  }
+
 }
