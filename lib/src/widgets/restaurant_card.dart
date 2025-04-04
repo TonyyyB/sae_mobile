@@ -5,6 +5,7 @@ import 'package:sae_mobile/src/widgets/favorie_widget.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
 import '../../config/colors.dart';
 import '../../models/restaurant.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant _restaurant;
@@ -43,10 +44,14 @@ class RestaurantCard extends StatelessWidget {
                       children: [
                         Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(_restaurant.name,
+                            child: SizedBox(
+                                width: 180.0,
+                                child : AutoSizeText(_restaurant.name,
+                                maxLines: 1,
+                                minFontSize: 24,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: PickMenuColors.textColor,
-                                    fontSize: 24))),
+                                color: PickMenuColors.textColor, fontSize: 24)))),
                         Align(
                             alignment: Alignment.centerRight,
                             child:
