@@ -315,4 +315,69 @@ class DatabaseProvider {
 
     return null;
   }
+  // À ajouter à la classe DatabaseProvider
+
+  static Future<List<Restaurant>> getFavoriteRestaurants() async {
+    final user = getUser();
+    if (user == null) {
+      return [];
+    }
+
+    // Récupérer les IDs des restaurants favoris de l'utilisateur
+    final favorisData = await supabase
+        .from('favoris_restaurant')
+        .select('osm_id')
+        .eq('uuid', user.id);
+
+    if (favorisData.isEmpty) {
+      return [];
+    }
+
+    // Extraire les IDs des restaurants
+    List<int> restaurantIds = favorisData.map<int>((item) => item['osm_id'] as int).toList();
+
+    // Récupérer les détails de chaque restaurant favori
+    List<Restaurant> favoriteRestaurants = [];
+    for (int id in restaurantIds) {
+      Restaurant? restaurant = await getRestaurantById(id, loadAvis: false);
+      if (restaurant != null) {
+        favoriteRestaurants.add(restaurant);
+      }
+    }
+
+    return favoriteRestaurants;
+  }
+
+  static Future<bool> isRestaurantFavorite(int restaurantId) async {
+    final user = getUser();
+    if (user == null) {
+      return false;
+    }
+
+    final data = await supabase
+        .from('favoris_restaurant')
+        .select()
+        .eq('uuid', user.id)
+        .eq('osm_id', restaurantId);
+
+    return data.isNotEmpty;
+  }
+
+  static Future<String?> removeFavoriRestaurant(int restaurantId) async {
+    final user = getUser();
+    if (user == null) {
+      return "Utilisateur non connecté";
+    }
+
+    String? err;
+    await supabase
+        .from('favoris_restaurant')
+        .delete()
+        .eq('uuid', user.id)
+        .eq('osm_id', restaurantId)
+        .onError((error, stackTrace) {
+      err = error.toString();
+    });
+    return err;
+  }
 }

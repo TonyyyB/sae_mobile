@@ -3,10 +3,10 @@ import 'package:sae_mobile/src/data/database_provider.dart';
 import 'package:sae_mobile/src/screens/avis_screen.dart';
 import 'package:sae_mobile/src/screens/connexion_screen.dart';
 import 'package:sae_mobile/src/screens/detail_screen.dart';
+import 'package:sae_mobile/src/screens/favoris_screen.dart';
 import 'package:sae_mobile/src/screens/home_screen.dart';
 import 'package:sae_mobile/src/screens/inscription_screen.dart';
-
-import '../src/screens/user_screen.dart';
+import 'package:sae_mobile/src/screens/user_screen.dart';
 
 final GoRouter router = GoRouter(
     redirect: (context, state) {
@@ -28,10 +28,11 @@ final GoRouter router = GoRouter(
           builder: (context, state) => ConnexionScreen(),
           routes: [
             GoRoute(
-              path: '/inscription',
+              path: 'inscription',
               builder: (context, state) => InscriptionScreen(),
             ),
-          ]),
+          ]
+      ),
       GoRoute(
         path: '/home',
         builder: (context, state) => HomeScreen(),
@@ -50,9 +51,15 @@ final GoRouter router = GoRouter(
                 return AvisScreen(id: restaurantId!);
               },
             ),
-          ]),
+          ]
+      ),
       GoRoute(
         path: '/profil',
         builder: (context, state) => const UserScreen(),
       ),
-    ]);
+      GoRoute(
+        path: '/favoris',
+        builder: (context, state) => const FavorisScreen(),
+      ),
+    ]
+);
