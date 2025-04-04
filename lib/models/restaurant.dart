@@ -122,7 +122,7 @@ class Restaurant {
     }
     return res / diviser;
   }
-
+  
   String? get parseCuisine {
     if (_cuisine == null) {
       return null;
@@ -137,12 +137,12 @@ class Restaurant {
     return res;
   }
 
-  String? get parseOpeningHours {
-    if (_openingHours == null) {
+  String? get parseOpeningHours{
+    if(_openingHours == null){
       return null;
     }
     var res = "";
-    for (var horaire in _openingHours) {
+    for (var horaire in _openingHours){
       res += '      $horaire\n';
     }
     return res;

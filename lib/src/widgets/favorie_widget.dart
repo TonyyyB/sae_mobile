@@ -4,27 +4,40 @@ import 'package:sae_mobile/src/data/database_provider.dart';
 import '../../config/colors.dart';
 
 class FavoriteWidget extends StatefulWidget {
-  final int _idRestau;
-  FavoriteWidget({super.key, required int idRestau}): this._idRestau = idRestau;
+  final int idRestau;
+  FavoriteWidget({super.key, required this.idRestau});
 
   @override
-  State<FavoriteWidget> createState() => _FavoriteWidgetState(idRestau : _idRestau);
+  State<FavoriteWidget> createState()=>_FavoriteWidgetState();
   }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   bool _isFavorited = false;
-  int _idRestau;
 
-   _FavoriteWidgetState({required int idRestau}):
-    this._idRestau = idRestau;
+  @override
+  void initState() {
+    super.initState();
+    loadData().then((value) {
+      if(value) {
+        setState(() {
+          _isFavorited = true;
+        });
+      }
+    },);
+  }
+
+  Future<bool> loadData() async{
+    return await DatabaseProvider.isRestaurantFavori(widget.idRestau);
+  }
 
   void _toggleFavorite() {
     setState(() {
       if (_isFavorited) {
         _isFavorited = false;
+        DatabaseProvider.removeFavoriRestaurant(widget.idRestau);
       } else {
         _isFavorited = true;
-        DatabaseProvider.addFavoriRestaurant(this._idRestau);
+        DatabaseProvider.addFavoriRestaurant(widget.idRestau);
       }
     });
   }
