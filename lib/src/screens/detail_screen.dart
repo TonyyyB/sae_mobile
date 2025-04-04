@@ -9,8 +9,10 @@ import 'package:sae_mobile/models/restaurant.dart';
 import 'package:sae_mobile/models/avis.dart';
 import 'package:sae_mobile/src/widgets/avis.dart';
 import 'package:sae_mobile/src/widgets/noteEtoile.dart';
+import '../../config/colors.dart';
 import '../data/database_provider.dart';
 import '../widgets/scaffold.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class DetailsScreen extends StatefulWidget {
   final int restaurantId;
@@ -60,11 +62,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                            restaurant.name,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                          child: SizedBox(
+                            width: 180.0,
+                            child : AutoSizeText(restaurant.name,
+                            maxLines: 2,
+                            minFontSize: 24,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                            color: PickMenuColors.textColor, fontSize: 24))),
                           ),
-                        ),
                         Align(
                             alignment: Alignment.centerRight,
                             child: NoteEtoile(
@@ -123,7 +129,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           _buildOpeningHours(restaurant),
           SizedBox(height: 8),
           // Options
-          Text("Option disponibles :",
+          Text("Options disponibles :",
               style: PickMenuTheme.detailTitleTextStyle()),
           _buildOptions(restaurant),
           SizedBox(height: 8),
