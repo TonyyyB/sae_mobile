@@ -156,15 +156,19 @@ class DatabaseProvider {
     return restaurant;
   }
 
-  static Future<Map<Restaurant, int?>> getTop5() async {
+  static Future<(List<Restaurant>, List<double?>)> getTop5() async {
     final data = await supabase.rpc('get_top_5');
-    Map<Restaurant, int?> res = {};
-    for (var topData in data) {
+    List<Restaurant> restaurants = [];
+    List<double?> notes = [];
+    for (var resData in data) {
       Restaurant? restau =
-          await DatabaseProvider.getRestaurantById(topData['osm_id']);
-      res[restau!] = topData['rating'];
+          await DatabaseProvider.getRestaurantById(resData['osm_id']);
+      if (restau != null) {
+        restaurants.add(restau);
+        notes.add(resData['rating']);
+      }
     }
-    return res;
+    return (restaurants, notes);
   }
 
   static Future<List<Avis>> getAvisRestaurant(Restaurant restaurant) async {
@@ -250,7 +254,6 @@ class DatabaseProvider {
     });
     return err;
   }
-
 
   static Future<Map<int, String>> getAllCuisines() async {
     final response =
@@ -363,7 +366,6 @@ class DatabaseProvider {
     return data.isNotEmpty;
   }
 
-
   static Future<List<Restaurant>> getFavorisRestaurants() async {
     final data = await supabase
         .from('favoris_restaurant')
@@ -381,7 +383,6 @@ class DatabaseProvider {
     return favoris;
   }
 
-
   static Future<String?> removeFavoriRestaurant(int restaurantId) async {
     String? err;
     await supabase
@@ -396,8 +397,8 @@ class DatabaseProvider {
     return err;
   }
 
-
-  static Future<(bool, String?)> toggleFavoriRestaurant(int restaurantId) async {
+  static Future<(bool, String?)> toggleFavoriRestaurant(
+      int restaurantId) async {
     bool isFavori = await isRestaurantFavori(restaurantId);
     String? err;
 
@@ -409,7 +410,6 @@ class DatabaseProvider {
       return (!err.toString().isEmpty, err);
     }
   }
-
 
   static Future<String?> removeCuisineFavorite(String nomCuisine) async {
     int? styleId = await getCuisineId(nomCuisine);
@@ -428,7 +428,6 @@ class DatabaseProvider {
     return err;
   }
 
-
   static Future<bool> isCuisineFavorite(String nomCuisine) async {
     int? styleId = await getCuisineId(nomCuisine);
     if (styleId == null) return false;
@@ -441,7 +440,6 @@ class DatabaseProvider {
 
     return data.isNotEmpty;
   }
-
 
   static Future<List<String>> getFavorisCuisines() async {
     final data = await supabase
@@ -469,11 +467,10 @@ class DatabaseProvider {
 
     if (isFavori) {
       err = await removeCuisineFavorite(nomCuisine);
-      return (!err.toString().isEmpty, err);
+      return (err.toString().isNotEmpty, err);
     } else {
       err = await addCuisineFavorite(nomCuisine);
-      return (!err.toString().isEmpty, err);
+      return (err.toString().isNotEmpty, err);
     }
   }
-
 }

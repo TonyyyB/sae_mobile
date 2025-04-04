@@ -13,8 +13,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Restaurant>>(
-      future: DatabaseProvider.getAllRestaurants(),
+    return FutureBuilder<(List<Restaurant>, List<double?>)>(
+      future: DatabaseProvider.getTop5(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -23,17 +23,16 @@ class HomeScreen extends StatelessWidget {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             }
-            List<Restaurant> data = snapshot.data!;
-            var restaus = [];
-            for (var i = 0; i <= 4; i++) {
-              var intValue = Random().nextInt(25);
-              restaus.add(data[intValue]);
-            }
+            List<Restaurant> restaus = snapshot.data!.$1;
+            List<double?> notes = snapshot.data!.$2;
             return PickMenuScaffold(
                 child: ListView.builder(
               itemCount: restaus.length,
               itemBuilder: (context, index) {
-                return RestaurantCard(restau: restaus[index]);
+                return RestaurantCard(
+                  restau: restaus[index],
+                  note: notes[index],
+                );
               },
             ));
         }

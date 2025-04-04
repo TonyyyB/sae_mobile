@@ -8,8 +8,9 @@ import '../../models/restaurant.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant _restaurant;
+  final double? note;
 
-  const RestaurantCard({super.key, required Restaurant restau})
+  const RestaurantCard({super.key, required Restaurant restau, this.note})
       : this._restaurant = restau;
 
   @override
@@ -49,27 +50,48 @@ class RestaurantCard extends StatelessWidget {
                                     fontSize: 24))),
                         Align(
                             alignment: Alignment.centerRight,
-                            child:
-                                NoteEtoile(rating: _restaurant.getGlobalRate))
+                            child: NoteEtoile(
+                                rating: this.note ?? _restaurant.getGlobalRate))
                       ]),
                 ),
               ),
               Padding(
                   padding: EdgeInsets.all(16),
-                  child: Column(
-                    children : [
-                      Align(alignment: Alignment.topLeft,
-                                  child: Padding(padding: EdgeInsets.fromLTRB(16, 5, 16, 16), child :Text(_restaurant.type, style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
-                      Align(alignment: Alignment.topLeft,
-                                  child:Padding(padding: EdgeInsets.all(16), child :Text('Type de cuisine : \n      $typeCuisine', style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
-                      Align(alignment: Alignment.topLeft,
-                                  child:Padding(padding: EdgeInsets.all(16), child :Text("Horaires d'ouverture : \n$horaires", style: TextStyle(color: PickMenuColors.inputHint, fontSize : 16)))),
-                      Align(alignment: Alignment.bottomRight,
-                                  child:Padding(padding: EdgeInsets.all(16), child :FavoriteWidget(idRestau : _restaurant.osmId))),
-                    ])
-                ),
-              ],
-            ),
-          ));
+                  child: Column(children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(16, 5, 16, 16),
+                            child: Text(_restaurant.type,
+                                style: TextStyle(
+                                    color: PickMenuColors.inputHint,
+                                    fontSize: 16)))),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text(
+                                'Type de cuisine : \n      $typeCuisine',
+                                style: TextStyle(
+                                    color: PickMenuColors.inputHint,
+                                    fontSize: 16)))),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text("Horaires d'ouverture : \n$horaires",
+                                style: TextStyle(
+                                    color: PickMenuColors.inputHint,
+                                    fontSize: 16)))),
+                    Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child:
+                                FavoriteWidget(idRestau: _restaurant.osmId))),
+                  ])),
+            ],
+          ),
+        ));
   }
 }
